@@ -11,12 +11,13 @@
     "esModuleInterop": true,
     "lib": ["esnext", "dom"],
     "types": [
-        "vite/client"
+        "vite/client",
+        "vitest"
     ],
     "paths": {
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "src/stories/tree-node.stories.ts", "src/stories/fstree.stories.ts"],
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "src/stories/name-node.stories.ts", "src/stories/fstree.stories.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

@@ -1,15 +1,10 @@
-<script setup lang="ts">
-import { defineComponent } from '@vue/runtime-core'
-
-</script>
-
 <template>
 <div class="tree-node-root" :style="style" @click="handleClick">
   <div class="row">
     <div class="indent"></div>
     <div v-if="hasChildren" class="collapsible-container">
-      <i-mdi-chevron-right v-if="!expanded" class="collapsible"/>
-      <i-mdi-chevron-down v-else class="collapsible"/>
+      <i-mdi-chevron-right v-if="!expanded" class="collapsible collapsed"/>
+      <i-mdi-chevron-down v-else class="collapsible expanded"/>
     </div>
     <div class="contents">
       <div v-if="!hasChildren" class="icon-container">
@@ -26,6 +21,7 @@ import { defineComponent } from '@vue/runtime-core'
 
 <script lang="ts">
 import { Icon } from '@iconify/vue'
+import { defineComponent } from '@vue/runtime-core'
 export default defineComponent({
   components: {
     Icon
@@ -41,7 +37,7 @@ export default defineComponent({
     },
     hasChildren: {
       type: Boolean,
-      required: true
+      default: false
     },
     expanded: {
       type: Boolean
@@ -65,9 +61,12 @@ export default defineComponent({
     }
   },
   methods: {
-    handleClick () {
-      this.$emit('update:expanded', !this.expanded)
-      this.$emit('select')
+    handleClick (e: MouseEvent) {
+      // Only trigger expand if neither shift nor meta/ctrl were held
+      if (!e.shiftKey && !(e.metaKey || e.ctrlKey)) {
+        this.$emit('update:expanded', !this.expanded)
+      }
+      this.$emit('select', e)
     }
   }
 })
@@ -93,7 +92,6 @@ export default defineComponent({
   overflow-x: hidden;
   overflow-y: hidden;
   cursor: pointer;
-  padding-left: var(--root-padding-left);
   height: var(--row-height);
   line-height: var(--line-height);
   font-size: var(--font-size);
@@ -116,7 +114,13 @@ export default defineComponent({
     justify-content: center;
     width: var(--collapsible-width);
     height: 100%;
-    padding-right: 6px;
+    padding-right: 4px;
+    padding-left: 2px;
+
+    .collapsible {
+      width: var(--icon-width);
+      height: var(--icon-height);
+    }
   }
 
   .contents {

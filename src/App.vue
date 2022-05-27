@@ -24,10 +24,11 @@ store.value.addEntries(Data)
 </script>
 
 <template>
-<div>
+<div class="container">
   <FsTree :store="store" cwd="/"/>
 </div>
 </template>
 
-<style>
+<style lang="scss" scoped>
+// @import 'bulma';
 </style>

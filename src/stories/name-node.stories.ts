@@ -1,9 +1,9 @@
-import TreeNode from '../components/tree-node.vue'
+import NameNode from '../components/name-node.vue'
 
 // More on default export: https://storybook.js.org/docs/vue/writing-stories/introduction#default-export
 export default {
-  title: 'Example/TreeNode',
-  component: TreeNode,
+  title: 'Example/NameNode',
+  component: NameNode,
   // More on argTypes: https://storybook.js.org/docs/vue/api/argtypes
   argTypes: {
     name: { type: 'String' }
@@ -13,7 +13,7 @@ export default {
 // More on component templates: https://storybook.js.org/docs/vue/writing-stories/introduction#using-args
 const Template = (args) => ({
   // Components used in your story `template` are defined in the `components` object
-  components: { TreeNode },
+  components: { TreeNode: NameNode },
   // The story's `args` need to be mapped into the template through the `setup()` method
   setup () {
     return { args }

@@ -5,10 +5,13 @@ import '@vue/runtime-core'
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
+    Column: typeof import('./src/components/column.vue')['default']
+    DateModifiedColumn: typeof import('./src/components/date-modified-column.vue')['default']
     FsTree: typeof import('./src/components/fs-tree.vue')['default']
     IMdiChevronDown: typeof import('~icons/mdi/chevron-down')['default']
     IMdiChevronRight: typeof import('~icons/mdi/chevron-right')['default']
-    TreeNode: typeof import('./src/components/tree-node.vue')['default']
+    NameNode: typeof import('./src/components/name-node.vue')['default']
+    SizeColumn: typeof import('./src/components/size-column.vue')['default']
   }
 }
 

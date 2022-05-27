@@ -6,10 +6,13 @@
     "build": "vue-tsc --noEmit && vite build",
     "serve": "vite preview",
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "build-storybook": "build-storybook",
+    "test": "vitest run --coverage"
   },
   "dependencies": {
     "@iconify/vue": "^3.2.1",
+    "@vueuse/core": "^8.5.0",
+    "filesize": "^8.0.7",
     "vue": "^3.2.25"
   },
   "devDependencies": {
@@ -25,6 +28,7 @@
     "@typescript-eslint/eslint-plugin": "^5.23.0",
     "@typescript-eslint/parser": "^5.23.0",
     "@vitejs/plugin-vue": "^2.3.3",
+    "@vue/test-utils": "^2.0.0",
     "babel-loader": "^8.2.5",
     "bulma": "^0.9.4",
     "eslint": "^8.15.0",
@@ -35,11 +39,14 @@
     "eslint-plugin-promise": "^6.0.0",
     "eslint-plugin-storybook": "^0.5.11",
     "eslint-plugin-vue": "^8.7.1",
+    "jsdom": "^19.0.0",
+    "jsdon": "^0.1.15",
     "sass": "^1.43.4",
     "typescript": "^4.5.4",
     "unplugin-icons": "^0.14.3",
     "unplugin-vue-components": "^0.19.5",
     "vite": "^2.8.0",
+    "vitest": "^0.12.9",
     "vue-loader": "^16.8.3",
     "vue-tsc": "^0.34.15"
   }

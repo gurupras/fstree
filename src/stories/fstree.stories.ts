@@ -60,19 +60,22 @@ function generateFakeEntries (count: number, unrelated: number = 0): StoreEntry[
   const root = {
     name: '/',
     path: '/',
-    parent: ''
+    parent: '',
+    size: 0
   }
   const src = {
     name: 'src',
     path: '/src',
-    parent: '/'
+    parent: '/',
+    size: 0
   }
   const badSrc = {
     name: 'bad-src',
     path: '/bad-src',
-    parent: '/'
+    parent: '/',
+    size: 0
   }
-  const result = [root, src, badSrc]
+  const result: StoreEntry[] = [root, src, badSrc]
 
   for (let idx = 0; idx < count; idx++) {
     const countStr = `${idx}`
@@ -81,7 +84,8 @@ function generateFakeEntries (count: number, unrelated: number = 0): StoreEntry[
     const entry = {
       name,
       parent: '/src',
-      path: `${src.path}/${name}`
+      path: `${src.path}/${name}`,
+      size: Math.random() * 1e6
     }
     result.push(entry)
   }
@@ -92,7 +96,8 @@ function generateFakeEntries (count: number, unrelated: number = 0): StoreEntry[
     const entry = {
       name,
       parent: '/bad-src',
-      path: `/bad-src/${name}`
+      path: `/bad-src/${name}`,
+      size: Math.random() * 1e6
     }
     result.push(entry)
   }
