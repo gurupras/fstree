@@ -18,12 +18,13 @@ export interface ChildrenMap {
   [id: string | symbol]: EntryMap
 }
 
-interface DepthEntry {
+export interface DepthEntry {
+  id: string | symbol
   depth: Number
   entry: StoreEntry
 }
 
-interface DepthEntryMap {
+export interface DepthEntryMap {
   [id: string | symbol]: DepthEntry
 }
 
@@ -35,6 +36,10 @@ interface StoreInterface {
   getId(entry: StoreEntry): string
   getParent(entry: StoreEntry): Ancestor
   getName(entry: StoreEntry): string
+}
+
+export interface SortFunction {
+  (a: StoreEntry, b: StoreEntry): number
 }
 
 export class Store {
@@ -69,7 +74,7 @@ export class Store {
     return false
   }
 
-  getEntries (ancestor: Ancestor, depth?: number, result?: DepthEntryMap) {
+  getEntries (ancestor: Ancestor, sort: SortFunction, depth?: number, result?: DepthEntryMap) {
     if (!result) {
       result = {}
     }
@@ -87,9 +92,11 @@ export class Store {
     if (!childrenEntryMap) {
       return
     }
-    for (const [id, entry] of Object.entries(childrenEntryMap)) {
-      result[id] = { depth, entry }
-      this.getEntries(id, depth + 1, result)
+    const entries = Object.entries(childrenEntryMap)
+    const sortedEntries = entries.sort((a, b) => sort(a[1], b[1]))
+    for (const [id, entry] of sortedEntries) {
+      result[id] = { id, depth, entry }
+      this.getEntries(id, sort, depth + 1, result)
     }
     return result
   }

@@ -4,6 +4,9 @@ import { Store, StoreEntry } from '@/js/store'
 import { ref } from '@vue/reactivity'
 
 import 'bulma'
+import './style.scss'
+import '@/style/themes/default.scss'
+
 // More on default export: https://storybook.js.org/docs/vue/writing-stories/introduction#default-export
 export default {
   title: 'Example/FSTree',
@@ -29,11 +32,13 @@ const Template = (args) => ({
   },
   // And then the `args` are bound to your component with `v-bind="args"`
   template: `
-  <div class="container section">
+  <div class="container section" style="height: 100%">
     <div>
       <button class="button is-link" @click="addStoreEntries">Add Entries</button>
     </div>
-    <FSTree :store="store" cwd="/"/>
+    <div class="root">
+      <FSTree :store="store" cwd="/"/>
+    </div>
   </div>
   `
 })
@@ -57,23 +62,30 @@ function generateStore () {
 }
 
 function generateFakeEntries (count: number, unrelated: number = 0): StoreEntry[] {
+  const now = Date.now()
+
+  const generateLastModified = () => now - (Math.random() * 1e12)
+
   const root = {
     name: '/',
     path: '/',
     parent: '',
-    size: 0
+    size: 0,
+    lastModified: generateLastModified()
   }
   const src = {
     name: 'src',
     path: '/src',
     parent: '/',
-    size: 0
+    size: 0,
+    lastModified: generateLastModified()
   }
   const badSrc = {
     name: 'bad-src',
     path: '/bad-src',
     parent: '/',
-    size: 0
+    size: 0,
+    lastModified: generateLastModified()
   }
   const result: StoreEntry[] = [root, src, badSrc]
 
@@ -85,7 +97,8 @@ function generateFakeEntries (count: number, unrelated: number = 0): StoreEntry[
       name,
       parent: '/src',
       path: `${src.path}/${name}`,
-      size: Math.random() * 1e6
+      size: Math.random() * 1e6,
+      lastModified: generateLastModified()
     }
     result.push(entry)
   }
@@ -97,7 +110,8 @@ function generateFakeEntries (count: number, unrelated: number = 0): StoreEntry[
       name,
       parent: '/bad-src',
       path: `/bad-src/${name}`,
-      size: Math.random() * 1e6
+      size: Math.random() * 1e6,
+      lastModified: generateLastModified()
     }
     result.push(entry)
   }
@@ -113,7 +127,8 @@ C100.args = {
 export const C1000 = Template.bind({})
 // More on args: https://storybook.js.org/docs/vue/writing-stories/args
 C1000.args = {
-  count: 1000
+  count: 1000,
+  bad: 1000
 }
 
 export const C100OutOf10K = Template.bind({})

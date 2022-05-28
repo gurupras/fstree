@@ -2,24 +2,16 @@
 <table>
   <thead>
     <tr>
-      <Column label="Name"/>
       <Column v-for="col in columns" :key="col.label"
-          :label="col.label"/>
+          :label="col.label"
+          :sort="sortColumn.label === col.label ? sortOrder : SortOrder.Undefined"
+          @update:sort="val => onSort(col, val)"/>
     </tr>
   </thead>
   <tbody>
     <tr v-for="({ depth, entry }, id) in getContents()" :key="id">
-      <td>
-        <NameNode
-            :name="store.getName(entry)"
-            :has-children="store.hasChildren[id]"
-            :depth="depth"
-            icon="vscode-icons:default-file"
-            :expanded="store.expanded[id]"
-            @update:expanded="val => updateExpanded(id, val)"/>
-      </td>
       <td v-for="col in columns" :key="id + '-' + col.label">
-        <component :is="col.component" :entry-id="id" :entry="entry" :store="store"/>
+        <component :is="col.component" :entry-id="id" :entry="entry" :depth="depth" :store="store"/>
       </td>
     </tr>
   </tbody>
@@ -27,10 +19,10 @@
 </template>
 
 <script lang="ts">
-import { Store } from '@/js/store'
+import { Store, StoreEntry } from '@/js/store'
 import { defineComponent } from '@vue/runtime-core'
 import type { PropType } from 'vue'
-import { Column, SizeColumn, DateModifiedColumn } from '@/js/column'
+import { Column, NameColumn, SizeColumn, DateModifiedColumn, SortOrder } from '@/js/column'
 
 export default defineComponent({
   emits: [
@@ -38,7 +30,7 @@ export default defineComponent({
   ],
   props: {
     store: {
-      type: Store,
+      type: Object as PropType<Store>,
       required: true
     },
     cwd: {
@@ -48,6 +40,7 @@ export default defineComponent({
       type: Array as PropType<Column[]>,
       default () {
         return [
+          NameColumn,
           SizeColumn,
           DateModifiedColumn
         ]
@@ -60,6 +53,15 @@ export default defineComponent({
     }
   },
   computed: {
+    SortOrder () {
+      return SortOrder
+    }
+  },
+  data () {
+    return {
+      sortColumn: null as any as Column,
+      sortOrder: SortOrder.Undefined
+    }
   },
   methods: {
     onUpdateCWD (n: string, o?: string) {
@@ -69,13 +71,19 @@ export default defineComponent({
       this.store.updateExpanded(n, true)
     },
     getContents () {
-      return this.store.getEntries(this.cwd as string)
+      const sort = (a: StoreEntry, b: StoreEntry) => this.sortColumn.sort(a, b, this.sortOrder, this.store)
+      return this.store.getEntries(this.cwd as string, sort)
     },
     updateExpanded (id: string, val: boolean) {
       this.store.updateExpanded(id, val)
+    },
+    onSort (column: Column, order: SortOrder) {
+      this.sortColumn = column
+      this.sortOrder = order
     }
   },
   beforeMount () {
+    this.onSort(this.columns[0], SortOrder.Ascending)
     if (this.cwd) {
       this.onUpdateCWD(this.cwd)
     }
@@ -85,14 +93,25 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 table {
-  --row-hover-color: rgba(120, 120, 120, 0.4);
   table-layout: fixed;
   width: 100%;
   border-collapse: collapse;
+  background-color: var(--fstree-background-color);
+  color: var(--fstree-text-color);
+  overflow: hidden;
 
-  tbody tr {
-    &:hover {
-      background-color: var(--row-hover-color);
+  thead, tbody, th, tr {
+    color: inherit;
+  }
+
+  tbody {
+    overflow-y: auto;
+    tr {
+      height: var(--fstree-row-height);
+      line-height: var(--fstree-row-line-height);
+      &:hover {
+        background-color: var(--fstree-row-hover-color);
+      }
     }
   }
 }

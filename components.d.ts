@@ -7,11 +7,16 @@ declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     Column: typeof import('./src/components/column.vue')['default']
     DateModifiedColumn: typeof import('./src/components/date-modified-column.vue')['default']
+    DateModifiedColumnEntry: typeof import('./src/components/date-modified-column-entry.vue')['default']
     FsTree: typeof import('./src/components/fs-tree.vue')['default']
     IMdiChevronDown: typeof import('~icons/mdi/chevron-down')['default']
     IMdiChevronRight: typeof import('~icons/mdi/chevron-right')['default']
+    IMdiChevronUp: typeof import('~icons/mdi/chevron-up')['default']
+    NameColumn: typeof import('./src/components/name-column.vue')['default']
+    NameColumnEntry: typeof import('./src/components/name-column-entry.vue')['default']
     NameNode: typeof import('./src/components/name-node.vue')['default']
     SizeColumn: typeof import('./src/components/size-column.vue')['default']
+    SizeColumnEntry: typeof import('./src/components/size-column-entry.vue')['default']
   }
 }
 

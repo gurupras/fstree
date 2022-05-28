@@ -11,7 +11,7 @@
         <Icon :icon="icon" class="icon"/>
       </div>
       <div class="label-container">
-        <span class="label">{{name}}</span>
+        <span class="label-text">{{name}}</span>
         <slot name="description"></slot>
       </div>
     </div>
@@ -74,15 +74,13 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .tree-node-root {
-  --row-height: 22px;
-  --icon-width: 16px;
-  --icon-height: 16px;
-  --icon-padding-right: 6px;
-  --line-height: var(--row-height, 22px);
-  --root-padding-left: 4px;
-  --collapsible-width: 16px;
-  --font-size: 1em;
-  --indent: 12px;
+  --fstree-name-node-icon-width: 16px;
+  --fstree-name-node-icon-height: 16px;
+  --fstree-name-node-icon-padding-right: 6px;
+  --fstree-name-node-root-padding-left: 4px;
+  --fstree-name-node-collapsible-width: 16px;
+  --fstree-name-node-font-size: 1em;
+  --fstree-name-node-indent: 12px;
 
   position: relative;
   display: block;
@@ -92,9 +90,9 @@ export default defineComponent({
   overflow-x: hidden;
   overflow-y: hidden;
   cursor: pointer;
-  height: var(--row-height);
-  line-height: var(--line-height);
-  font-size: var(--font-size);
+  height: var(--fstree-row-height);
+  line-height: var(--fstree-row-line-height);
+  font-size: var(--fstree-name-node-font-size);
 
   .row {
     display: flex;
@@ -104,7 +102,7 @@ export default defineComponent({
   }
 
   .indent {
-    width: calc(var(--depth, 0) * var(--indent));
+    width: calc(var(--depth, 0) * var(--fstree-name-node-indent));
   }
 
   .collapsible-container {
@@ -112,14 +110,15 @@ export default defineComponent({
     flex-shrink: 0;
     align-items: center;
     justify-content: center;
-    width: var(--collapsible-width);
+    width: var(--fstree-name-node-collapsible-width);
     height: 100%;
     padding-right: 4px;
     padding-left: 2px;
 
     .collapsible {
-      width: var(--icon-width);
-      height: var(--icon-height);
+      width: var(--fstree-name-node-icon-width);
+      height: var(--fstree-name-node-icon-height);
+      overflow: unset;
     }
   }
 
@@ -133,11 +132,11 @@ export default defineComponent({
     .icon-container {
       display: flex;
       align-items: center;
-      padding-right: var(--icon-padding-right);
+      padding-right: var(--fstree-name-node-icon-padding-right);
     }
     .icon {
-      width: var(--icon-width);
-      height: var(--icon-height);
+      width: var(--fstree-name-node-icon-width);
+      height: var(--fstree-name-node-icon-height);
     }
 
     .label-container {
@@ -146,7 +145,7 @@ export default defineComponent({
       text-overflow: ellipsis;
       flex: 1;
 
-      .label {
+      .label-text {
       }
     }
   }

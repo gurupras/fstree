@@ -1,7 +1,6 @@
 export default [
   {
     separator: '/',
-    modifiedUtc: '2022-05-11T19:17:29.833Z',
     isDirectory: true,
     filePermissions: {
       canWrite: true
@@ -12,11 +11,11 @@ export default [
     parent: '',
     name: '/',
     path: '/',
-    location: ''
+    location: '',
+    lastModified: 1652296649833
   },
   {
     separator: '/',
-    modifiedUtc: '2022-05-11T19:17:29.833Z',
     isDirectory: true,
     filePermissions: {
       canWrite: true
@@ -27,11 +26,11 @@ export default [
     parent: '/',
     name: 'src',
     path: '/src',
-    location: '/'
+    location: '/',
+    lastModified: 1652296649833
   },
   {
     separator: '/',
-    modifiedUtc: '2022-05-11T19:17:29.817Z',
     isDirectory: true,
     filePermissions: {
       canWrite: true
@@ -42,11 +41,11 @@ export default [
     parent: '/src',
     name: 'env.ts',
     path: '/src/env.ts',
-    location: '/src/'
+    location: '/src/',
+    lastModified: 1652296649817
   },
   {
     separator: '/',
-    modifiedUtc: '2022-05-11T19:17:29.818Z',
     isDirectory: true,
     filePermissions: {
       canWrite: true
@@ -57,11 +56,11 @@ export default [
     parent: '/src',
     name: 'global.d.ts',
     path: '/src/global.d.ts',
-    location: '/src/'
+    location: '/src/',
+    lastModified: 1652296649818
   },
   {
     separator: '/',
-    modifiedUtc: '2022-05-11T19:17:29.818Z',
     isDirectory: true,
     filePermissions: {
       canWrite: true
@@ -72,11 +71,11 @@ export default [
     parent: '/src',
     name: 'auto-imports.d.ts',
     path: '/src/auto-imports.d.ts',
-    location: '/src/'
+    location: '/src/',
+    lastModified: 1652296649818
   },
   {
     separator: '/',
-    modifiedUtc: '2022-05-11T19:17:29.819Z',
     isDirectory: true,
     filePermissions: {
       canWrite: true
@@ -87,11 +86,11 @@ export default [
     parent: '/src',
     name: 'components.d.ts',
     path: '/src/components.d.ts',
-    location: '/src/'
+    location: '/src/',
+    lastModified: 1652296649819
   },
   {
     separator: '/',
-    modifiedUtc: '2022-05-11T19:17:29.819Z',
     isDirectory: true,
     filePermissions: {
       canWrite: true
@@ -102,11 +101,11 @@ export default [
     parent: '/src',
     name: 'manifest.ts',
     path: '/src/manifest.ts',
-    location: '/src/'
+    location: '/src/',
+    lastModified: 1652296649819
   },
   {
     separator: '/',
-    modifiedUtc: '2022-05-11T19:17:29.820Z',
     isDirectory: true,
     filePermissions: {
       canWrite: true
@@ -117,11 +116,11 @@ export default [
     parent: '/src',
     name: 'background',
     path: '/src/background',
-    location: '/src/'
+    location: '/src/',
+    lastModified: 1652296649820
   },
   {
     separator: '/',
-    modifiedUtc: '2022-05-11T19:17:29.819Z',
     isDirectory: true,
     filePermissions: {
       canWrite: true
@@ -132,11 +131,11 @@ export default [
     parent: '/src/background',
     name: 'contentScriptHMR.ts',
     path: '/src/background/contentScriptHMR.ts',
-    location: '/src/background/'
+    location: '/src/background/',
+    lastModified: 1652296649819
   },
   {
     separator: '/',
-    modifiedUtc: '2022-05-11T19:17:29.820Z',
     isDirectory: true,
     filePermissions: {
       canWrite: true
@@ -147,11 +146,11 @@ export default [
     parent: '/src/background',
     name: 'detect-user.ts',
     path: '/src/background/detect-user.ts',
-    location: '/src/background/'
+    location: '/src/background/',
+    lastModified: 1652296649820
   },
   {
     separator: '/',
-    modifiedUtc: '2022-05-11T19:17:29.820Z',
     isDirectory: true,
     filePermissions: {
       canWrite: true
@@ -162,11 +161,11 @@ export default [
     parent: '/src/background',
     name: 'index.html',
     path: '/src/background/index.html',
-    location: '/src/background/'
+    location: '/src/background/',
+    lastModified: 1652296649820
   },
   {
     separator: '/',
-    modifiedUtc: '2022-05-11T19:17:29.820Z',
     isDirectory: true,
     filePermissions: {
       canWrite: true
@@ -177,11 +176,11 @@ export default [
     parent: '/src/background',
     name: 'main.ts',
     path: '/src/background/main.ts',
-    location: '/src/background/'
+    location: '/src/background/',
+    lastModified: 1652296649820
   },
   {
     separator: '/',
-    modifiedUtc: '2022-05-11T19:17:29.821Z',
     isDirectory: true,
     filePermissions: {
       canWrite: true
@@ -192,11 +191,11 @@ export default [
     parent: '/src',
     name: 'logic',
     path: '/src/logic',
-    location: '/src/'
+    location: '/src/',
+    lastModified: 1652296649821
   },
   {
     separator: '/',
-    modifiedUtc: '2022-05-11T19:17:29.821Z',
     isDirectory: true,
     filePermissions: {
       canWrite: true
@@ -207,11 +206,11 @@ export default [
     parent: '/src/logic',
     name: 'index.ts',
     path: '/src/logic/index.ts',
-    location: '/src/logic/'
+    location: '/src/logic/',
+    lastModified: 1652296649821
   },
   {
     separator: '/',
-    modifiedUtc: '2022-05-11T19:17:29.821Z',
     isDirectory: true,
     filePermissions: {
       canWrite: true
@@ -222,11 +221,11 @@ export default [
     parent: '/src/logic',
     name: 'scripts.ts',
     path: '/src/logic/scripts.ts',
-    location: '/src/logic/'
+    location: '/src/logic/',
+    lastModified: 1652296649821
   },
   {
     separator: '/',
-    modifiedUtc: '2022-05-11T19:17:29.821Z',
     isDirectory: true,
     filePermissions: {
       canWrite: true
@@ -237,11 +236,11 @@ export default [
     parent: '/src/logic',
     name: 'run-once.ts',
     path: '/src/logic/run-once.ts',
-    location: '/src/logic/'
+    location: '/src/logic/',
+    lastModified: 1652296649821
   },
   {
     separator: '/',
-    modifiedUtc: '2022-05-11T19:17:29.823Z',
     isDirectory: true,
     filePermissions: {
       canWrite: true
@@ -252,11 +251,11 @@ export default [
     parent: '/src',
     name: 'popup',
     path: '/src/popup',
-    location: '/src/'
+    location: '/src/',
+    lastModified: 1652296649823
   },
   {
     separator: '/',
-    modifiedUtc: '2022-05-11T19:17:29.822Z',
     isDirectory: true,
     filePermissions: {
       canWrite: true
@@ -267,11 +266,11 @@ export default [
     parent: '/src/popup',
     name: 'Popup.vue',
     path: '/src/popup/Popup.vue',
-    location: '/src/popup/'
+    location: '/src/popup/',
+    lastModified: 1652296649822
   },
   {
     separator: '/',
-    modifiedUtc: '2022-05-11T19:17:29.822Z',
     isDirectory: true,
     filePermissions: {
       canWrite: true
@@ -282,11 +281,11 @@ export default [
     parent: '/src/popup',
     name: 'index.html',
     path: '/src/popup/index.html',
-    location: '/src/popup/'
+    location: '/src/popup/',
+    lastModified: 1652296649822
   },
   {
     separator: '/',
-    modifiedUtc: '2022-05-11T19:17:29.822Z',
     isDirectory: true,
     filePermissions: {
       canWrite: true
@@ -297,11 +296,11 @@ export default [
     parent: '/src/popup',
     name: 'main.ts',
     path: '/src/popup/main.ts',
-    location: '/src/popup/'
+    location: '/src/popup/',
+    lastModified: 1652296649822
   },
   {
     separator: '/',
-    modifiedUtc: '2022-05-11T19:17:29.823Z',
     isDirectory: true,
     filePermissions: {
       canWrite: true
@@ -312,11 +311,11 @@ export default [
     parent: '/src/popup',
     name: 'styles',
     path: '/src/popup/styles',
-    location: '/src/popup/'
+    location: '/src/popup/',
+    lastModified: 1652296649823
   },
   {
     separator: '/',
-    modifiedUtc: '2022-05-11T19:17:29.823Z',
     isDirectory: true,
     filePermissions: {
       canWrite: true
@@ -327,11 +326,11 @@ export default [
     parent: '/src/popup/styles',
     name: 'index.ts',
     path: '/src/popup/styles/index.ts',
-    location: '/src/popup/styles/'
+    location: '/src/popup/styles/',
+    lastModified: 1652296649823
   },
   {
     separator: '/',
-    modifiedUtc: '2022-05-11T19:17:29.823Z',
     isDirectory: true,
     filePermissions: {
       canWrite: true
@@ -342,11 +341,11 @@ export default [
     parent: '/src/popup/styles',
     name: 'main.css',
     path: '/src/popup/styles/main.css',
-    location: '/src/popup/styles/'
+    location: '/src/popup/styles/',
+    lastModified: 1652296649823
   },
   {
     separator: '/',
-    modifiedUtc: '2022-05-11T19:17:29.826Z',
     isDirectory: true,
     filePermissions: {
       canWrite: true
@@ -357,11 +356,11 @@ export default [
     parent: '/src',
     name: 'styles',
     path: '/src/styles',
-    location: '/src/'
+    location: '/src/',
+    lastModified: 1652296649826
   },
   {
     separator: '/',
-    modifiedUtc: '2022-05-11T19:17:29.824Z',
     isDirectory: true,
     filePermissions: {
       canWrite: true
@@ -372,11 +371,11 @@ export default [
     parent: '/src/styles',
     name: 'index.ts',
     path: '/src/styles/index.ts',
-    location: '/src/styles/'
+    location: '/src/styles/',
+    lastModified: 1652296649824
   },
   {
     separator: '/',
-    modifiedUtc: '2022-05-11T19:17:29.824Z',
     isDirectory: true,
     filePermissions: {
       canWrite: true
@@ -387,11 +386,11 @@ export default [
     parent: '/src/styles',
     name: 'variables.scss',
     path: '/src/styles/variables.scss',
-    location: '/src/styles/'
+    location: '/src/styles/',
+    lastModified: 1652296649824
   },
   {
     separator: '/',
-    modifiedUtc: '2022-05-11T19:17:29.825Z',
     isDirectory: true,
     filePermissions: {
       canWrite: true
@@ -402,11 +401,11 @@ export default [
     parent: '/src/styles',
     name: 'main.css',
     path: '/src/styles/main.css',
-    location: '/src/styles/'
+    location: '/src/styles/',
+    lastModified: 1652296649825
   },
   {
     separator: '/',
-    modifiedUtc: '2022-05-11T19:17:29.825Z',
     isDirectory: true,
     filePermissions: {
       canWrite: true
@@ -417,11 +416,11 @@ export default [
     parent: '/src/styles',
     name: 'main.scss',
     path: '/src/styles/main.scss',
-    location: '/src/styles/'
+    location: '/src/styles/',
+    lastModified: 1652296649825
   },
   {
     separator: '/',
-    modifiedUtc: '2022-05-11T19:17:29.826Z',
     isDirectory: true,
     filePermissions: {
       canWrite: true
@@ -432,11 +431,11 @@ export default [
     parent: '/src/styles',
     name: 'mixins.scss',
     path: '/src/styles/mixins.scss',
-    location: '/src/styles/'
+    location: '/src/styles/',
+    lastModified: 1652296649826
   },
   {
     separator: '/',
-    modifiedUtc: '2022-05-11T19:17:29.826Z',
     isDirectory: true,
     filePermissions: {
       canWrite: true
@@ -447,11 +446,11 @@ export default [
     parent: '/src',
     name: 'composables',
     path: '/src/composables',
-    location: '/src/'
+    location: '/src/',
+    lastModified: 1652296649826
   },
   {
     separator: '/',
-    modifiedUtc: '2022-05-11T19:17:29.826Z',
     isDirectory: true,
     filePermissions: {
       canWrite: true
@@ -462,11 +461,11 @@ export default [
     parent: '/src/composables',
     name: 'useStorageLocal.ts',
     path: '/src/composables/useStorageLocal.ts',
-    location: '/src/composables/'
+    location: '/src/composables/',
+    lastModified: 1652296649826
   },
   {
     separator: '/',
-    modifiedUtc: '2022-05-11T19:17:29.829Z',
     isDirectory: true,
     filePermissions: {
       canWrite: true
@@ -477,11 +476,11 @@ export default [
     parent: '/src',
     name: 'options',
     path: '/src/options',
-    location: '/src/'
+    location: '/src/',
+    lastModified: 1652296649829
   },
   {
     separator: '/',
-    modifiedUtc: '2022-05-11T19:17:29.827Z',
     isDirectory: true,
     filePermissions: {
       canWrite: true
@@ -492,11 +491,11 @@ export default [
     parent: '/src/options',
     name: 'Options.vue',
     path: '/src/options/Options.vue',
-    location: '/src/options/'
+    location: '/src/options/',
+    lastModified: 1652296649827
   },
   {
     separator: '/',
-    modifiedUtc: '2022-05-11T19:17:29.827Z',
     isDirectory: true,
     filePermissions: {
       canWrite: true
@@ -507,11 +506,11 @@ export default [
     parent: '/src/options',
     name: 'Editor.vue',
     path: '/src/options/Editor.vue',
-    location: '/src/options/'
+    location: '/src/options/',
+    lastModified: 1652296649827
   },
   {
     separator: '/',
-    modifiedUtc: '2022-05-11T19:17:29.828Z',
     isDirectory: true,
     filePermissions: {
       canWrite: true
@@ -522,11 +521,11 @@ export default [
     parent: '/src/options',
     name: 'style.scss',
     path: '/src/options/style.scss',
-    location: '/src/options/'
+    location: '/src/options/',
+    lastModified: 1652296649828
   },
   {
     separator: '/',
-    modifiedUtc: '2022-05-11T19:17:29.828Z',
     isDirectory: true,
     filePermissions: {
       canWrite: true
@@ -537,11 +536,11 @@ export default [
     parent: '/src/options',
     name: 'index.html',
     path: '/src/options/index.html',
-    location: '/src/options/'
+    location: '/src/options/',
+    lastModified: 1652296649828
   },
   {
     separator: '/',
-    modifiedUtc: '2022-05-11T19:17:29.829Z',
     isDirectory: true,
     filePermissions: {
       canWrite: true
@@ -552,11 +551,11 @@ export default [
     parent: '/src/options',
     name: 'main.ts',
     path: '/src/options/main.ts',
-    location: '/src/options/'
+    location: '/src/options/',
+    lastModified: 1652296649829
   },
   {
     separator: '/',
-    modifiedUtc: '2022-05-11T19:17:29.831Z',
     isDirectory: true,
     filePermissions: {
       canWrite: true
@@ -567,11 +566,11 @@ export default [
     parent: '/src',
     name: 'components',
     path: '/src/components',
-    location: '/src/'
+    location: '/src/',
+    lastModified: 1652296649831
   },
   {
     separator: '/',
-    modifiedUtc: '2022-05-11T19:17:29.829Z',
     isDirectory: true,
     filePermissions: {
       canWrite: true
@@ -582,11 +581,11 @@ export default [
     parent: '/src/components',
     name: 'README.md',
     path: '/src/components/README.md',
-    location: '/src/components/'
+    location: '/src/components/',
+    lastModified: 1652296649829
   },
   {
     separator: '/',
-    modifiedUtc: '2022-05-11T19:17:29.829Z',
     isDirectory: true,
     filePermissions: {
       canWrite: true
@@ -597,11 +596,11 @@ export default [
     parent: '/src/components',
     name: 'Logo.vue',
     path: '/src/components/Logo.vue',
-    location: '/src/components/'
+    location: '/src/components/',
+    lastModified: 1652296649829
   },
   {
     separator: '/',
-    modifiedUtc: '2022-05-11T19:17:29.830Z',
     isDirectory: true,
     filePermissions: {
       canWrite: true
@@ -612,11 +611,11 @@ export default [
     parent: '/src/components',
     name: 'checkbox-switch.vue',
     path: '/src/components/checkbox-switch.vue',
-    location: '/src/components/'
+    location: '/src/components/',
+    lastModified: 1652296649830
   },
   {
     separator: '/',
-    modifiedUtc: '2022-05-11T19:17:29.831Z',
     isDirectory: true,
     filePermissions: {
       canWrite: true
@@ -627,11 +626,11 @@ export default [
     parent: '/src/components',
     name: 'modal.vue',
     path: '/src/components/modal.vue',
-    location: '/src/components/'
+    location: '/src/components/',
+    lastModified: 1652296649831
   },
   {
     separator: '/',
-    modifiedUtc: '2022-05-11T19:17:29.833Z',
     isDirectory: true,
     filePermissions: {
       canWrite: true
@@ -642,11 +641,11 @@ export default [
     parent: '/src',
     name: 'contentScripts',
     path: '/src/contentScripts',
-    location: '/src/'
+    location: '/src/',
+    lastModified: 1652296649833
   },
   {
     separator: '/',
-    modifiedUtc: '2022-05-11T19:17:29.831Z',
     isDirectory: true,
     filePermissions: {
       canWrite: true
@@ -657,11 +656,11 @@ export default [
     parent: '/src/contentScripts',
     name: 'index.ts',
     path: '/src/contentScripts/index.ts',
-    location: '/src/contentScripts/'
+    location: '/src/contentScripts/',
+    lastModified: 1652296649831
   },
   {
     separator: '/',
-    modifiedUtc: '2022-05-11T19:17:29.831Z',
     isDirectory: true,
     filePermissions: {
       canWrite: true
@@ -672,11 +671,11 @@ export default [
     parent: '/src/contentScripts',
     name: 'utils.ts',
     path: '/src/contentScripts/utils.ts',
-    location: '/src/contentScripts/'
+    location: '/src/contentScripts/',
+    lastModified: 1652296649831
   },
   {
     separator: '/',
-    modifiedUtc: '2022-05-11T19:17:29.832Z',
     isDirectory: true,
     filePermissions: {
       canWrite: true
@@ -687,11 +686,11 @@ export default [
     parent: '/src/contentScripts',
     name: 'fix-imports.ts',
     path: '/src/contentScripts/fix-imports.ts',
-    location: '/src/contentScripts/'
+    location: '/src/contentScripts/',
+    lastModified: 1652296649832
   },
   {
     separator: '/',
-    modifiedUtc: '2022-05-11T19:17:29.832Z',
     isDirectory: true,
     filePermissions: {
       canWrite: true
@@ -702,11 +701,11 @@ export default [
     parent: '/src/contentScripts',
     name: 'timeit.ts',
     path: '/src/contentScripts/timeit.ts',
-    location: '/src/contentScripts/'
+    location: '/src/contentScripts/',
+    lastModified: 1652296649832
   },
   {
     separator: '/',
-    modifiedUtc: '2022-05-11T19:17:29.833Z',
     isDirectory: true,
     filePermissions: {
       canWrite: true
@@ -717,11 +716,11 @@ export default [
     parent: '/src/contentScripts',
     name: 'views',
     path: '/src/contentScripts/views',
-    location: '/src/contentScripts/'
+    location: '/src/contentScripts/',
+    lastModified: 1652296649833
   },
   {
     separator: '/',
-    modifiedUtc: '2022-05-11T19:17:29.833Z',
     isDirectory: true,
     filePermissions: {
       canWrite: true
@@ -732,6 +731,7 @@ export default [
     parent: '/src/contentScripts/views',
     name: 'App.vue',
     path: '/src/contentScripts/views/App.vue',
-    location: '/src/contentScripts/views/'
+    location: '/src/contentScripts/views/',
+    lastModified: 1652296649833
   }
 ]

@@ -8,6 +8,8 @@ import { defineComponent } from '@vue/runtime-core'
 import filesize from 'filesize'
 import type { PropType } from 'vue'
 
+const size = filesize.partial({ round: 0, standard: 'jedec' })
+
 export default defineComponent({
   props: {
     entryId: {
@@ -33,8 +35,8 @@ export default defineComponent({
       } else if (this.entry.size <= 1024) {
         return '1 KB'
       }
-      const size = filesize(this.entry.size, { round: 0, standard: 'jedec' })
-      return size
+      const humanSize = size(this.entry.size)
+      return humanSize.toUpperCase()
     }
   }
 })

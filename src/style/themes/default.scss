@@ -1,0 +1,7 @@
+.root {
+    --fstree-row-height: 22px;
+    --fstree-row-line-height: var(--row-height, 22px);
+    --fstree-background-color: rgb(37, 37, 38);
+    --fstree-text-color: rgb(204, 204, 204);
+    --fstree-row-hover-color: rgba(120, 120, 120, 0.4);
+}
