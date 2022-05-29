@@ -1,5 +1,5 @@
 <template>
-<div class="tree-node-root" :style="style" @click="handleClick">
+<div class="tree-node-root" :style="style" @click="$event => $emit('toggle-expand', $event)">
   <div class="row">
     <div class="indent"></div>
     <div v-if="hasChildren" class="collapsible-container">
@@ -27,8 +27,7 @@ export default defineComponent({
     Icon
   },
   emits: [
-    'update:expanded',
-    'select'
+    'toggle-expand'
   ],
   props: {
     name: {
@@ -61,13 +60,6 @@ export default defineComponent({
     }
   },
   methods: {
-    handleClick (e: MouseEvent) {
-      // Only trigger expand if neither shift nor meta/ctrl were held
-      if (!e.shiftKey && !(e.metaKey || e.ctrlKey)) {
-        this.$emit('update:expanded', !this.expanded)
-      }
-      this.$emit('select', e)
-    }
   }
 })
 </script>

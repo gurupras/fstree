@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import FsTree from '@/components/fs-tree.vue'
-import { Store, StoreEntry } from '@/js/store'
+import { DepthEntryMap, EntryMap, Store, StoreEntry } from '@/js/store'
 import { ref } from '@vue/reactivity'
 
 import Data from './sameple-data'
@@ -8,8 +8,8 @@ import Data from './sameple-data'
 </script>
 
 <template>
-<div class="root container is-flex">
-  <div class="is-flex is-flex-direction-column is-flex-grow-1">
+<div class="root container is-flex is-clipped">
+  <div class="is-flex is-flex-direction-column is-flex-grow-1 is-clipped">
     <FsTree :store="store" cwd="/" class="fstree"/>
   </div>
 </div>
@@ -36,6 +36,13 @@ const store = ref(new Store({
 store.value.addEntries(Data)
 
 export default defineComponent({
+  data () {
+    return {
+    }
+  },
+  methods: {
+
+  },
   mounted () {
     window.store = store
     window.app = this

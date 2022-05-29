@@ -13,7 +13,8 @@
     "@iconify/vue": "^3.2.1",
     "@vueuse/core": "^8.5.0",
     "filesize": "^8.0.7",
-    "vue": "^3.2.25"
+    "vue": "^3.2.25",
+    "vue-virtual-scroller": "^2.0.0-alpha.1"
   },
   "devDependencies": {
     "@babel/core": "^7.17.10",

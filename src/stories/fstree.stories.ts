@@ -34,7 +34,7 @@ const Template = (args) => ({
   template: `
   <div class="container section" style="height: 100%">
     <div>
-      <button class="button is-link" @click="addStoreEntries">Add Entries</button>
+      <button class="button is-link" @click="addStoreEntries">Add Entries (src={{args.count}} bad-src={{args.bad || 0}})</button>
     </div>
     <div class="root">
       <FSTree :store="store" cwd="/"/>

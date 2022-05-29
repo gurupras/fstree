@@ -1,14 +1,14 @@
 <template>
-<th @click="updateSort">
-  <span class="column-label not-selectable">
+<div class="column-root">
+  <span class="column-label not-selectable" @click.stop="updateSort">
     {{label}}
   </span>
-  <span class="sort-order">
+  <span class="sort-order" @click="updateSort">
     <i-mdi-chevron-up v-if="sort === SortOrder.Ascending"/>
     <i-mdi-chevron-down v-else-if="sort === SortOrder.Descending"/>
   </span>
   <div class="resizer" :class="{resizing}" @mousedown="onMouseDown" ref="resizer"></div>
-</th>
+</div>
 </template>
 
 <script lang="ts">
@@ -21,7 +21,7 @@ import { SortOrder } from '@/js/column'
 const mouse = reactive(useMouse())
 
 export default defineComponent({
-  emits: ['update:sort'],
+  emits: ['update:sort', 'resize'],
   props: {
     label: {
       type: String,
@@ -62,7 +62,7 @@ export default defineComponent({
     },
     onMouseMove () {
       const dx = mouse.x - this.x
-      this.$el.style.width = `${this.w + dx}px`
+      this.$emit('resize', `${this.w + dx}px`)
     },
     onMouseUp () {
       document.removeEventListener('mousemove', this.onMouseMove)
@@ -81,15 +81,21 @@ export default defineComponent({
       }
       this.$emit('update:sort', val)
     }
+  },
+  mounted () {
+    const styles = getComputedStyle(this.$el)
+    const width = parseInt(styles.width, 10)
+    this.$emit('resize', `${width}px`)
   }
 })
 </script>
 
 <style lang="scss" scoped>
-th {
+.column-root {
   position: relative;
+  display: flex;
+  align-items: center;
   text-align: left;
-  vertical-align: middle;
   border: 1px solid grey;
   &:last-child {
     border-right: none;
@@ -97,18 +103,23 @@ th {
   &:first-child {
     border-left: none;
   }
-  padding-left: 8px;
   font-size: 0.9rem;
   cursor: pointer;
 
-  > span {
-    vertical-align: inherit;
-    svg {
-      vertical-align: inherit;
-    }
+  .sort-order, .column-label {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .column-label {
+    flex: 1;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding-left: 8px;
   }
 
   .sort-order {
+    align-items: center;
     float: right;
     padding-right: 14px;
   }
