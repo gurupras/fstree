@@ -59,21 +59,6 @@ export class Store {
     this.children = {}
   }
 
-  _isDescendant (entry: StoreEntry, ancestor: Ancestor): boolean {
-    const parent = this.getParent(entry)
-    if (parent && parent === ancestor) {
-      return true
-    } else if (parent && parent !== ancestor) {
-      // Get the store entry for this parent
-      const parentEntry = this.entryMap[parent]
-      if (!parentEntry) {
-        return false
-      }
-      return this._isDescendant(parentEntry, ancestor)
-    }
-    return false
-  }
-
   getEntries (ancestor: Ancestor, sort: SortFunction, depth?: number, result?: DepthEntryMap) {
     if (!result) {
       result = {}
