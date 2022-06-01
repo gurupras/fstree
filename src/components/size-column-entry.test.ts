@@ -1,6 +1,6 @@
 import { mount } from '@vue/test-utils'
 import { test, expect, describe, beforeEach, vitest } from 'vitest'
-import { mockStore, mockStoreEntry as GenerateMockStoreEntry } from '@/js/store.test'
+import { mockStore, mockStoreEntry as GenerateMockStoreEntry } from '@/js/test-utils'
 import SizeColumnEntry from './size-column-entry.vue'
 import { Store } from '@/js/store'
 

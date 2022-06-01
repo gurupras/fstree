@@ -1,8 +1,8 @@
 <template>
 <div class="fstree-root"
     tabindex="0"
-    @click="$event => selectionPlugin.handleSelect($event, contentsArray)"
-    @keyup="$event => keyboardNavigationPlugin.onKeyboardNavigation($event, contentsArray, store)">
+    @click="onClick"
+    @keyup="onKeyUp">
   <div class="header-root">
     <Column v-for="col in columns" :key="col.label"
         class="column-header"
@@ -25,7 +25,7 @@
               :depth="item.depth"
               :store="store"
               :key-field="col.keyField"
-              @click.stop="($event: MouseEvent) => selectionPlugin.handleSelect($event, contentsArray, item, index)"
+              @click.stop="($event: MouseEvent) => onRowClick($event, item, index)"
               @toggle-expand="($event: MouseEvent) => onToggleExpand($event, item.id)"/>
         </div>
       </div>
@@ -35,7 +35,7 @@
 </template>
 
 <script lang="ts">
-import { DepthEntry, DepthEntryMap, Store, StoreEntry } from '@/js/store'
+import { DepthEntry, DepthEntryMap, RootSymbol, Store, StoreEntry } from '@/js/store'
 import { defineComponent } from '@vue/runtime-core'
 import type { PropType } from 'vue'
 import { Column, NameColumn, SizeColumn, DateModifiedColumn, SortOrder } from '@/js/column'
@@ -58,7 +58,8 @@ export default defineComponent({
       required: true
     },
     cwd: {
-      type: String
+      type: String,
+      default: () => RootSymbol
     },
     columns: {
       type: Array as PropType<Column[]>,
@@ -103,7 +104,7 @@ export default defineComponent({
     },
     contents (): DepthEntryMap {
       const sort = (a: StoreEntry, b: StoreEntry) => this.sortColumn.sort(a, b, this.sortOrder, this.store)
-      return this.store.getEntries(this.cwd as string, sort) || {}
+      return this.store.getEntries(this.cwd, sort) || {}
     },
     contentsArray (): DepthEntry[] {
       return Object.values(this.contents)
@@ -134,6 +135,21 @@ export default defineComponent({
     onToggleExpand (e: MouseEvent, itemId: string) {
       if (!e.shiftKey && !(e.metaKey || e.ctrlKey)) {
         this.updateExpanded(itemId, !this.store.expanded[itemId])
+      }
+    },
+    onClick (e: MouseEvent) {
+      if (this.selectionPlugin) {
+        this.selectionPlugin.handleSelect(e, this.contentsArray)
+      }
+    },
+    onKeyUp (e: KeyboardEvent) {
+      if (this.keyboardNavigationPlugin) {
+        this.keyboardNavigationPlugin.onKeyboardNavigation(e, this.contentsArray, this.store)
+      }
+    },
+    onRowClick (e: MouseEvent, item: DepthEntry, index: number) {
+      if (this.selectionPlugin) {
+        this.selectionPlugin.handleSelect(e, this.contentsArray, item, index)
       }
     }
   },

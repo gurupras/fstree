@@ -35,7 +35,10 @@ export default defineComponent({
       type: String
     },
     sort: {
-      type: String as PropType<SortOrder>
+      type: String as PropType<SortOrder>,
+      default: () => {
+        return SortOrder.Undefined
+      }
     }
   },
   data () {

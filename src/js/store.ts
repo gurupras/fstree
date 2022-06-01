@@ -1,6 +1,8 @@
+import { reactive } from 'vue'
+
 type Ancestor = string | null
 
-export const RootSymbol = Symbol.for('root')
+export const RootSymbol = Symbol.for('root').toString()
 
 export type StoreEntry<T = any> = T & {
   [id: string | symbol]: any
@@ -49,12 +51,12 @@ export class Store<T = any> {
 
   constructor (iface: StoreInterface<T>) {
     this.interface = iface
-    this.data = [] as StoreEntry<T>[]
-    this.entryMap = {} as EntryMap<T>
-    this.expanded = {
+    this.data = reactive([])
+    this.entryMap = reactive({})
+    this.expanded = reactive({
       [RootSymbol]: true
-    }
-    this.children = {} as ChildrenMap<T>
+    })
+    this.children = reactive({})
   }
 
   getEntries (ancestor: Ancestor, sort: SortFunction = () => 1, depth?: number, result?: DepthEntryMap<T>) {
@@ -121,7 +123,7 @@ export class Store<T = any> {
   }
 
   getParent (entry: StoreEntry<T>) {
-    return this.interface.getParent(entry)
+    return this.interface.getParent(entry) || RootSymbol
   }
 
   hasChildren (entry: StoreEntry<T> | string | Symbol): boolean {

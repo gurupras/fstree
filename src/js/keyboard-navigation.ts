@@ -72,9 +72,7 @@ export function KeyboardNavigationPlugin (selectionPlugin: ISelectionPlugin) {
         if (!store.expanded[contentEntry.id]) {
           // This entry is not expanded. We need to jump to the parent
           const parentId = store.getParent(contentEntry.entry)
-          if (!parentId) {
-            return
-          }
+
           const parentEntry = store.entryMap[parentId]
           if (!parentEntry) {
             return

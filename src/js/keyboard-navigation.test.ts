@@ -2,8 +2,7 @@ import { beforeEach, describe, expect, test } from 'vitest'
 import { KeyboardNavigationCallback, KeyboardNavigationPlugin } from './keyboard-navigation'
 import { ContentEntry, ISelectionPlugin, SelectionPlugin } from './selection'
 import { DepthEntry, EntryMap, Store, StoreEntry } from './store'
-import { mockStore, mockStoreEntry, MockStoreEntry } from './store.test'
-import { fakeKeyboardEvent, fakeMouseEvent, KeyboardEventData } from './test-utils'
+import { mockStore, mockStoreEntry, MockStoreEntry, fakeKeyboardEvent, fakeMouseEvent, KeyboardEventData } from './test-utils'
 
 describe('Keyboard Navigation', () => {
   let store: Store<MockStoreEntry>

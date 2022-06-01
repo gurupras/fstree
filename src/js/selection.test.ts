@@ -1,8 +1,7 @@
 import { beforeEach, describe, expect, test } from 'vitest'
 import { ISelectionPlugin, SelectionPlugin } from './selection'
 import { DepthEntry, Store, StoreEntry } from './store'
-import { mockStore, mockStoreEntry, MockStoreEntry } from './store.test'
-import { fakeMouseEvent } from './test-utils'
+import { mockStore, mockStoreEntry, MockStoreEntry, fakeMouseEvent } from './test-utils'
 
 describe('Selection', () => {
   let store: Store<MockStoreEntry>

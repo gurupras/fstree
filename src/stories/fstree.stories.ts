@@ -6,7 +6,7 @@ import { ref } from '@vue/reactivity'
 import 'bulma'
 import './style.scss'
 import '@/style/themes/default.scss'
-import { generateLastModified } from '@/js/test-utils'
+import { generateLastModified, mockStore, MockStoreEntry, mockStoreEntry } from '@/js/test-utils'
 
 // More on default export: https://storybook.js.org/docs/vue/writing-stories/introduction#default-export
 export default {
@@ -22,14 +22,28 @@ const Template = (args) => ({
   setup () {
     return {
       args,
-      store: generateStore()
+      store: mockStore<MockStoreEntry>('path', 'parent')
+    }
+  },
+  data () {
+    return {
+      cwd: '/'
     }
   },
   methods: {
     addStoreEntries () {
       const entries = generateFakeEntries(args.count, args.bad)
       this.store.addEntries(entries)
+    },
+    mockStoreEntry (data?: any) {
+      const entry: any = mockStoreEntry(data)
+      entry.path = entry.id
+      delete entry.id
+      return entry
     }
+  },
+  mounted () {
+    window.app = this
   },
   // And then the `args` are bound to your component with `v-bind="args"`
   template: `
@@ -38,26 +52,11 @@ const Template = (args) => ({
       <button class="button is-link" @click="addStoreEntries">Add Entries (src={{args.count}} bad-src={{args.bad || 0}})</button>
     </div>
     <div class="root">
-      <FSTree :store="store" cwd="/"/>
+      <FSTree :store="store" :cwd="cwd" ref="fstree"/>
     </div>
   </div>
   `
 })
-
-function generateStore () {
-  const store = new Store({
-    getId (entry: StoreEntry) {
-      return entry.path as string
-    },
-    getParent (entry: StoreEntry) {
-      if (entry.parent === '') {
-        return null
-      }
-      return entry.parent as string
-    }
-  })
-  return ref(store)
-}
 
 function generateFakeEntries (count: number, unrelated: number = 0): StoreEntry[] {
   const root = {
