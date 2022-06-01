@@ -67,7 +67,7 @@ test('Shows correct icon when folder is expanded', async () => {
   expect(wrapper.find('.collapsed').exists()).toBe(false)
 })
 
-test('Emits \'update:expanded\' event when clicked', async () => {
+test('Emits \'toggle-expand\' event when clicked', async () => {
   let wrapper = mount(NameNode, {
     props: {
       name: 'dummy',
@@ -77,8 +77,8 @@ test('Emits \'update:expanded\' event when clicked', async () => {
     }
   })
   wrapper.find('.collapsed').trigger('click')
-  expect(wrapper.emitted('update:expanded')).toBeTruthy()
-  expect(wrapper.emitted('update:expanded')![0]).toEqual([true])
+  expect(wrapper.emitted('toggle-expand')).toBeTruthy()
+  expect((wrapper.emitted('toggle-expand')![0] as Array<any>)[0]).toBeInstanceOf(MouseEvent)
 
   wrapper = mount(NameNode, {
     props: {
@@ -89,8 +89,8 @@ test('Emits \'update:expanded\' event when clicked', async () => {
     }
   })
   wrapper.find('.expanded').trigger('click')
-  expect(wrapper.emitted('update:expanded')).toBeTruthy()
-  expect(wrapper.emitted('update:expanded')![0]).toEqual([false])
+  expect(wrapper.emitted('toggle-expand')).toBeTruthy()
+  expect((wrapper.emitted('toggle-expand')![0] as Array<any>)[0]).toBeInstanceOf(MouseEvent)
 })
 
 test.each([
@@ -112,26 +112,26 @@ test.each([
   expect(wrapper.emitted('update:expanded')).toBeFalsy()
 })
 
-test('Emits \'select\' event when clicked', async () => {
-  let wrapper = mount(NameNode, {
-    props: {
-      name: 'dummy',
-      hasChildren: true,
-      expanded: false,
-      icon: 'vscode-icons:default-file'
-    }
-  })
-  wrapper.find('.collapsed').trigger('click')
-  expect(wrapper.emitted('select')).toBeTruthy()
+// test('Emits \'select\' event when clicked', async () => {
+//   let wrapper = mount(NameNode, {
+//     props: {
+//       name: 'dummy',
+//       hasChildren: true,
+//       expanded: false,
+//       icon: 'vscode-icons:default-file'
+//     }
+//   })
+//   wrapper.find('.collapsed').trigger('click')
+//   expect(wrapper.emitted('select')).toBeTruthy()
 
-  wrapper = mount(NameNode, {
-    props: {
-      name: 'dummy',
-      hasChildren: true,
-      expanded: true,
-      icon: 'vscode-icons:default-file'
-    }
-  })
-  wrapper.find('.expanded').trigger('click')
-  expect(wrapper.emitted('select')).toBeTruthy()
-})
+//   wrapper = mount(NameNode, {
+//     props: {
+//       name: 'dummy',
+//       hasChildren: true,
+//       expanded: true,
+//       icon: 'vscode-icons:default-file'
+//     }
+//   })
+//   wrapper.find('.expanded').trigger('click')
+//   expect(wrapper.emitted('select')).toBeTruthy()
+// })

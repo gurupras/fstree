@@ -11,6 +11,7 @@ export enum SortOrder {
 
 export interface Column {
   label: string
+  keyField: string
   component: any
   sort(a: StoreEntry, b: StoreEntry, order: SortOrder, store: Store): number
 }
@@ -19,6 +20,7 @@ const nameCollator = new Intl.Collator(undefined, { numeric: true, sensitivity: 
 
 export const NameColumn: Column = {
   label: 'Name',
+  keyField: 'name',
   component: NameColumnEntry,
   sort (a: StoreEntry, b: StoreEntry, order: SortOrder, store: Store) {
     let first: StoreEntry
@@ -32,10 +34,10 @@ export const NameColumn: Column = {
       second = a
     }
 
-    const firstHasChildren = store.hasChildren[store.getId(first)]
-    const secondHasChildren = store.hasChildren[store.getId(second)]
+    const firstHasChildren = store.hasChildren(store.getId(first))
+    const secondHasChildren = store.hasChildren(store.getId(second))
 
-    const nameComparison = nameCollator.compare(first.name, second.name)
+    const nameComparison = nameCollator.compare(first[this.keyField], second[this.keyField])
     if ((firstHasChildren && secondHasChildren)) {
       return nameComparison
     } else if (firstHasChildren) {
@@ -50,24 +52,36 @@ export const NameColumn: Column = {
 
 export const SizeColumn: Column = {
   label: 'Size',
+  keyField: 'size',
   component: SizeColumnEntry,
-  sort (a: StoreEntry, b: StoreEntry, order: SortOrder): number {
+  sort (a: StoreEntry, b: StoreEntry, order: SortOrder, store: Store): number {
+    const aSize = store.hasChildren(a) ? 0 : a[this.keyField]
+    const bSize = store.hasChildren(b) ? 0 : b[this.keyField]
+    if (aSize === bSize) {
+      return NameColumn.sort(a, b, order, store)
+    }
     if (order === SortOrder.Ascending) {
-      return a.size - b.size
+      return aSize - bSize
     } else {
-      return b.size - a.size
+      return bSize - aSize
     }
   }
 }
 
 export const DateModifiedColumn: Column = {
   label: 'Date Modified',
+  keyField: 'lastModified',
   component: DateModifiedColumnEntry,
-  sort (a: StoreEntry, b: StoreEntry, order: SortOrder): number {
+  sort (a: StoreEntry, b: StoreEntry, order: SortOrder, store: Store): number {
+    const aLastModified = a[this.keyField]
+    const bLastModified = b[this.keyField]
+    if (aLastModified === bLastModified) {
+      return NameColumn.sort(a, b, order, store)
+    }
     if (order === SortOrder.Ascending) {
-      return a.lastModified - b.lastModified
+      return aLastModified - bLastModified
     } else {
-      return b.lastModified - a.lastModified
+      return bLastModified - aLastModified
     }
   }
 }

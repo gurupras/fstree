@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import FsTree from '@/components/fs-tree.vue'
-import { DepthEntryMap, EntryMap, Store, StoreEntry } from '@/js/store'
+import { Store, StoreEntry } from '@/js/store'
 import { ref } from '@vue/reactivity'
 
 import Data from './sameple-data'
@@ -18,22 +18,28 @@ import Data from './sameple-data'
 <script lang="ts">
 import { defineComponent } from '@vue/runtime-core'
 
-const store = ref(new Store({
-  getId (entry: StoreEntry) {
-    return entry.path as string
+interface IStoreEntry {
+  name: string
+  path: string
+  parent: string
+  hasChildren: boolean
+  size: number
+  lastModified: number
+}
+
+const store = ref(new Store<IStoreEntry>({
+  getId (entry: StoreEntry<IStoreEntry>) {
+    return entry.path
   },
-  getParent (entry: StoreEntry) {
+  getParent (entry: StoreEntry<IStoreEntry>) {
     if (entry.parent === '') {
       return null
     }
     return entry.parent as string
-  },
-  getName (entry: StoreEntry) {
-    return entry.name as string
   }
 }))
 
-store.value.addEntries(Data)
+store.value.addEntries(Data as any as StoreEntry<IStoreEntry>[])
 
 export default defineComponent({
   data () {

@@ -12,6 +12,10 @@ const size = filesize.partial({ round: 0, standard: 'jedec' })
 
 export default defineComponent({
   props: {
+    keyField: {
+      type: String,
+      required: true
+    },
     entryId: {
       type: String,
       required: true
@@ -27,15 +31,15 @@ export default defineComponent({
   },
   computed: {
     humanSize () {
-      if (this.store.hasChildren[this.entryId]) {
+      if (this.store.hasChildren(this.entryId)) {
         return ''
       }
-      if (this.entry.size === 0) {
+      if (this.entry[this.keyField] === 0) {
         return '0 KB'
-      } else if (this.entry.size <= 1024) {
+      } else if (this.entry[this.keyField] <= 1024) {
         return '1 KB'
       }
-      const humanSize = size(this.entry.size)
+      const humanSize = size(this.entry[this.keyField])
       return humanSize.toUpperCase()
     }
   }

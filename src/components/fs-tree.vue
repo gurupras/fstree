@@ -9,7 +9,7 @@
         :style="columnStyles[col.label]"
         :label="col.label"
         :sort="sortColumn.label === col.label ? sortOrder : SortOrder.Undefined"
-        @update:sort="(val: any) => onSort(col, val)"
+        @update:sort="(val: SortOrder) => onSort(col, val)"
         @resize="(val: string) => { columnWidths[col.label] = val }"/>
   </div>
   <div class="body-root">
@@ -24,6 +24,7 @@
               :entry="item.entry"
               :depth="item.depth"
               :store="store"
+              :key-field="col.keyField"
               @click.stop="($event: MouseEvent) => selectionPlugin.handleSelect($event, contentsArray, item, index)"
               @toggle-expand="($event: MouseEvent) => onToggleExpand($event, item.id)"/>
         </div>
@@ -160,6 +161,8 @@ export default defineComponent({
   background-color: var(--fstree-background-color);
   color: var(--fstree-text-color);
   overflow: hidden;
+  font-family: system-ui,Ubuntu,Droid Sans,sans-serif;
+  font-size: 14px;
 
   .header-root {
     display: flex;

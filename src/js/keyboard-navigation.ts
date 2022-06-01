@@ -1,5 +1,7 @@
-import { ISelectionPlugin } from './selection'
+import { ContentEntry, ISelectionPlugin } from './selection'
 import { DepthEntry, Store } from './store'
+
+export type KeyboardNavigationCallback = (e: KeyboardEvent, contentsArray: Array<DepthEntry>, store: Store) => void
 
 export function KeyboardNavigationPlugin (selectionPlugin: ISelectionPlugin) {
   const onKeyboardNavigation = (e: KeyboardEvent, contentsArray: Array<DepthEntry>, store: Store) => {
@@ -45,11 +47,27 @@ export function KeyboardNavigationPlugin (selectionPlugin: ISelectionPlugin) {
         break
       }
       case 'ArrowRight': {
+        if (e.shiftKey || hasMetaKey) {
+          // Do nothing
+          return
+        }
         const entry = contentsArray[currentIndex]
         store.updateExpanded(entry.id as string, true)
         break
       }
       case 'ArrowLeft': {
+        if (e.shiftKey) {
+          // Do nothing
+          return
+        }
+        if (hasMetaKey) {
+          // Collapse all expanded
+          store.expanded = {}
+          // Reset selection and focus
+          selectionPlugin.handleSelect({} as MouseEvent, contentsArray)
+          selectionPlugin.focusedEntry.value = null as any as ContentEntry // TODO: Figure out if this should happen internally
+          return
+        }
         const contentEntry = contentsArray[currentIndex]
         if (!store.expanded[contentEntry.id]) {
           // This entry is not expanded. We need to jump to the parent

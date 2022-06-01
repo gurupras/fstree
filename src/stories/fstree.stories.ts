@@ -6,6 +6,7 @@ import { ref } from '@vue/reactivity'
 import 'bulma'
 import './style.scss'
 import '@/style/themes/default.scss'
+import { generateLastModified } from '@/js/test-utils'
 
 // More on default export: https://storybook.js.org/docs/vue/writing-stories/introduction#default-export
 export default {
@@ -53,19 +54,12 @@ function generateStore () {
         return null
       }
       return entry.parent as string
-    },
-    getName (entry: StoreEntry) {
-      return entry.name as string
     }
   })
   return ref(store)
 }
 
 function generateFakeEntries (count: number, unrelated: number = 0): StoreEntry[] {
-  const now = Date.now()
-
-  const generateLastModified = () => now - (Math.random() * 1e12)
-
   const root = {
     name: '/',
     path: '/',

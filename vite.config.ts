@@ -21,6 +21,11 @@ export default defineConfig({
   ],
   test: {
     globals: true,
-    environment: 'jsdom'
+    environment: 'jsdom',
+    coverage: {
+      exclude: [
+        'src/js/test-utils.ts'
+      ]
+    }
   }
 })

@@ -1,11 +1,10 @@
 <template>
 <NameNode
-            :name="store.getName(entry)"
-            :has-children="store.hasChildren[entryId]"
+            :name="name"
+            :has-children="store.hasChildren(entryId)"
             :depth="depth"
             icon="vscode-icons:default-file"
-            :expanded="store.expanded[entryId]"
-            @update:expanded="val => updateExpanded(entryId, val)"/>
+            :expanded="store.expanded[entryId]"/>
 </template>
 
 <script lang="ts">
@@ -15,6 +14,10 @@ import type { PropType } from 'vue'
 
 export default defineComponent({
   props: {
+    keyField: {
+      type: String,
+      required: true
+    },
     entryId: {
       type: String,
       required: true
@@ -33,12 +36,7 @@ export default defineComponent({
   },
   computed: {
     name () {
-      return this.store.getName(this.entry)
-    }
-  },
-  methods: {
-    updateExpanded (id: string, val: boolean) {
-      this.store.updateExpanded(id, val)
+      return this.entry[this.keyField]
     }
   }
 })

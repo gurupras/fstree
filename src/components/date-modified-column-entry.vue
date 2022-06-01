@@ -15,6 +15,10 @@ const timeFormat = new Intl.DateTimeFormat(navigator.language, {
 
 export default defineComponent({
   props: {
+    keyField: {
+      type: String,
+      required: true
+    },
     entry: {
       type: Object as PropType<StoreEntry>,
       required: true
@@ -22,7 +26,7 @@ export default defineComponent({
   },
   computed: {
     dateStr () {
-      const date = new Date(this.entry.lastModified)
+      const date = new Date(this.entry[this.keyField])
       return `${dateFormat.format(date)} ${timeFormat.format(date)}`
     }
   }
