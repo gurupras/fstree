@@ -14,13 +14,13 @@
   "dependencies": {
     "@iconify/vue": "^3.2.1",
     "@vueuse/core": "^8.5.0",
-    "filesize": "^8.0.7",
-    "vue": "^3.2.25",
+    "filesize": "^9.0.0",
+    "vue": "^3.2.36",
     "vue-virtual-scroller": "^2.0.0-alpha.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.17.10",
-    "@iconify/json": "^2.1.43",
+    "@babel/core": "^7.18.2",
+    "@iconify/json": "^2.1.54",
     "@storybook/addon-actions": "^6.5.0-beta.8",
     "@storybook/addon-essentials": "^6.5.0-beta.8",
     "@storybook/addon-interactions": "^6.5.0-beta.8",
@@ -44,12 +44,13 @@
     "eslint-plugin-vue": "^8.7.1",
     "jsdom": "^19.0.0",
     "jsdon": "^0.1.15",
-    "sass": "^1.43.4",
-    "typescript": "^4.5.4",
+    "nanoid": "^3.3.4",
+    "sass": "^1.52.1",
+    "typescript": "^4.7.2",
     "unplugin-icons": "^0.14.3",
-    "unplugin-vue-components": "^0.19.5",
+    "unplugin-vue-components": "^0.19.6",
     "vite": "^2.8.0",
-    "vitest": "^0.12.9",
+    "vitest": "^0.13.0",
     "vue-loader": "^16.8.3",
     "vue-tsc": "^0.34.15"
   }
