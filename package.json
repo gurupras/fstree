@@ -7,7 +7,9 @@
     "serve": "vite preview",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
-    "test": "vitest run --coverage"
+    "test": "vitest run --coverage",
+    "debug:test": "node --inspect-brk ./node_modules/.bin/vitest run",
+    "watch:test": "vitest watch --coverage"
   },
   "dependencies": {
     "@iconify/vue": "^3.2.1",
