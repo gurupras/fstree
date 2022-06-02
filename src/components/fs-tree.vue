@@ -84,6 +84,12 @@ export default defineComponent({
   watch: {
     cwd (v, o) {
       this.onUpdateCWD(v, o)
+    },
+    'store.entryMap': {
+      deep: true,
+      handler () {
+        this.updateContents()
+      }
     }
   },
   computed: {
