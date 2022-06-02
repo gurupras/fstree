@@ -62,7 +62,9 @@ export function KeyboardNavigationPlugin (selectionPlugin: ISelectionPlugin) {
         }
         if (hasMetaKey) {
           // Collapse all expanded
-          store.expanded = {}
+          Object.keys(store.expanded).forEach(k => {
+            delete store.expanded[k]
+          })
           // Reset selection and focus
           selectionPlugin.handleSelect({} as MouseEvent, contentsArray)
           selectionPlugin.focusedEntry.value = null as any as ContentEntry // TODO: Figure out if this should happen internally
