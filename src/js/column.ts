@@ -2,6 +2,7 @@ import NameColumnEntry from '@/components/name-column-entry.vue'
 import SizeColumnEntry from '@/components/size-column-entry.vue'
 import DateModifiedColumnEntry from '@/components/date-modified-column-entry.vue'
 import { Store, StoreEntry } from './store'
+import { markRaw } from 'vue'
 
 export enum SortOrder {
   Ascending = 'ascending',
@@ -21,7 +22,7 @@ const nameCollator = new Intl.Collator(undefined, { numeric: true, sensitivity: 
 export const NameColumn: Column = {
   label: 'Name',
   keyField: 'name',
-  component: NameColumnEntry,
+  component: markRaw(NameColumnEntry),
   sort (a: StoreEntry, b: StoreEntry, order: SortOrder, store: Store) {
     let first: StoreEntry
     let second: StoreEntry
@@ -53,7 +54,7 @@ export const NameColumn: Column = {
 export const SizeColumn: Column = {
   label: 'Size',
   keyField: 'size',
-  component: SizeColumnEntry,
+  component: markRaw(SizeColumnEntry),
   sort (a: StoreEntry, b: StoreEntry, order: SortOrder, store: Store): number {
     const aSize = store.hasChildren(a) ? 0 : a[this.keyField]
     const bSize = store.hasChildren(b) ? 0 : b[this.keyField]
@@ -71,7 +72,7 @@ export const SizeColumn: Column = {
 export const DateModifiedColumn: Column = {
   label: 'Date Modified',
   keyField: 'lastModified',
-  component: DateModifiedColumnEntry,
+  component: markRaw(DateModifiedColumnEntry),
   sort (a: StoreEntry, b: StoreEntry, order: SortOrder, store: Store): number {
     const aLastModified = a[this.keyField]
     const bLastModified = b[this.keyField]
