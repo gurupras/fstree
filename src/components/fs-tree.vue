@@ -102,10 +102,6 @@ export default defineComponent({
       }
       return result
     },
-    contents (): DepthEntryMap {
-      const sort = (a: StoreEntry, b: StoreEntry) => this.sortColumn.sort(a, b, this.sortOrder, this.store)
-      return this.store.getEntries(this.cwd, sort) || {}
-    },
     contentsArray (): DepthEntry[] {
       return Object.values(this.contents)
     }
@@ -114,22 +110,29 @@ export default defineComponent({
     return {
       sortColumn: null as any as Column,
       sortOrder: SortOrder.Undefined,
-      columnWidths: {} as any
+      columnWidths: {} as any,
+      contents: {} as DepthEntryMap
     }
   },
   methods: {
-    onUpdateCWD (n: string, o?: string) {
+    onUpdateCWD (n: string, o?: string, updateContents = true) {
       if (o) {
-        this.store.updateExpanded(o, false)
+        this.updateExpanded(o, false, false)
       }
-      this.store.updateExpanded(n, true)
+      this.updateExpanded(n, true)
     },
-    updateExpanded (id: string, val: boolean) {
+    updateExpanded (id: string, val: boolean, updateContents = true) {
       this.store.updateExpanded(id, val)
+      if (updateContents) {
+        this.updateContents()
+      }
     },
-    onSort (column: Column, order: SortOrder) {
+    onSort (column: Column, order: SortOrder, updateContents = true) {
       this.sortColumn = column
       this.sortOrder = order
+      if (updateContents) {
+        this.updateContents()
+      }
     },
 
     onToggleExpand (e: MouseEvent, itemId: string) {
@@ -151,13 +154,19 @@ export default defineComponent({
       if (this.selectionPlugin) {
         this.selectionPlugin.handleSelect(e, this.contentsArray, item, index)
       }
+    },
+    updateContents () {
+      const sort = (a: StoreEntry, b: StoreEntry) => this.sortColumn.sort(a, b, this.sortOrder, this.store)
+      this.contents = this.store.getEntries(this.cwd, sort) || {}
+      console.log('Updated contents', Date.now())
     }
   },
   beforeMount () {
-    this.onSort(this.columns[0], SortOrder.Ascending)
+    this.onSort(this.columns[0], SortOrder.Ascending, false)
     if (this.cwd) {
       this.onUpdateCWD(this.cwd)
     }
+    this.updateContents()
   }
 })
 </script>
