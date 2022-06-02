@@ -146,7 +146,7 @@ describe('FSTree', () => {
     })
     test('Only shows expanded entries', async () => {
       expect(wrapper.vm.contentsArray.length).toBe(4)
-      store.updateExpanded(dir1.id, true)
+      wrapper.vm.updateExpanded(dir1.id, true)
       expect(store.expanded[RootSymbol]).toBe(true)
       expect(store.expanded[dir1.id]).toBe(true)
       await nextTick()
