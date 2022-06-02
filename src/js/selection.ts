@@ -13,6 +13,7 @@ export interface ISelectionPlugin<T = any> {
   selected: Ref<EntryMap<T>>
   handleSelect(e: MouseEvent, contentsArray: Array<DepthEntry>, depthEntry?: DepthEntry<T>, index?: number): void
   updateSelection(e: MouseEvent | KeyboardEvent, contentsArray: Array<DepthEntry>, depthEntry?: DepthEntry<T>, index ?: number): void
+  updateFocus(depthEntry?: DepthEntry<T>, index?: number): void
 }
 
 export function SelectionPlugin<T> (): ISelectionPlugin<T> {
@@ -25,6 +26,12 @@ export function SelectionPlugin<T> (): ISelectionPlugin<T> {
     updateSelection(e, contentsArray, depthEntry, index)
     if (depthEntry && index !== undefined) {
       lastSelectedEntry.value = { index, entry: depthEntry }
+    }
+    updateFocus(depthEntry, index)
+  }
+
+  const updateFocus = (depthEntry?: DepthEntry<T>, index?: number) => {
+    if (depthEntry && index !== undefined) {
       focusedEntry.value = { index, entry: depthEntry }
     } else {
       lastSelectedEntry.value = null as any as ContentEntry
@@ -82,6 +89,7 @@ export function SelectionPlugin<T> (): ISelectionPlugin<T> {
     focusedIndex,
     selected,
     handleSelect,
-    updateSelection
+    updateSelection,
+    updateFocus
   }
 }
