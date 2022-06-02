@@ -43,7 +43,6 @@ export interface SortFunction<T = any> {
 }
 
 export class Store<T = any> {
-  data: StoreEntry<T>[]
   entryMap: EntryMap<T>
   interface: StoreInterface<T>
   expanded: ExpandedMap
@@ -51,7 +50,6 @@ export class Store<T = any> {
 
   constructor (iface: StoreInterface<T>) {
     this.interface = iface
-    this.data = reactive([])
     this.entryMap = reactive({})
     this.expanded = reactive({
       [RootSymbol]: true
@@ -87,12 +85,10 @@ export class Store<T = any> {
   }
 
   addEntry (entry: StoreEntry<T>) {
-    this.data.push(entry)
     const id = this.getId(entry)
     this.entryMap[id] = entry
-    const parent = this.getParent(entry)
+    const parentId = this.getParent(entry)
 
-    const parentId = parent || RootSymbol
     if (!this.children[parentId]) {
       this.children[parentId] = {}
     }
@@ -101,6 +97,29 @@ export class Store<T = any> {
 
   addEntries (entries: StoreEntry<T>[]) {
     entries.forEach(this.addEntry, this)
+  }
+
+  removeEntry (entry: StoreEntry<T>) {
+    const id = this.getId(entry)
+    delete this.entryMap[id]
+    delete this.expanded[id]
+
+    const parentId = this.getParent(entry)
+
+    if (this.children[parentId]) {
+      delete this.children[parentId][id]
+      let isEmpty = true
+      // eslint-disable-next-line no-unreachable-loop
+      for (const _ in this.children[parentId]) {
+        isEmpty = false
+        break
+      }
+      if (isEmpty) {
+        // Parent is empty. So remove it's expanded
+        delete this.children[parentId]
+        delete this.expanded[parentId]
+      }
+    }
   }
 
   updateExpanded (id: string, val: boolean) {

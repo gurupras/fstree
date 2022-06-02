@@ -33,7 +33,7 @@ describe('Store', () => {
     test('Adds it to the store', async () => {
       const entry = mockStoreEntry()
       expect(() => store.addEntry(entry)).not.toThrow()
-      expect(store.data.length).toEqual(1)
+      expect(Object.keys(store.entryMap).length).toEqual(1)
     })
     test('Updates entryMap', async () => {
       const entry1 = mockStoreEntry()
@@ -77,13 +77,51 @@ describe('Store', () => {
   describe('removeEntry', () => {
     let child: StoreEntry<MockStoreEntry>
     beforeEach(() => {
-      child = mockStoreEntry()
+      child = mockStoreEntry({ parent: root.id })
       store.addEntries([root, child])
     })
 
-    test.todo('Updates entryMap')
-    test.todo('Updates children map')
-    test.todo('Resets expanded if entry no longer has any children')
+    test('Removes entry from entryMap', async () => {
+      store.removeEntry(child)
+      expect(Object.keys(store.entryMap)).toEqual([root.id])
+    })
+
+    test('Removes entry from children map', async () => {
+      const child1 = mockStoreEntry({ parent: root.id })
+      store.addEntry(child1)
+      store.removeEntry(child)
+      expect(Object.keys(store.children)).toEqual([RootSymbol, root.id])
+      expect(Object.keys(store.children[root.id])).toEqual([
+        child1.id
+      ])
+    })
+
+    test('Removes parent entry from children map if this was the only child', async () => {
+      store.removeEntry(child)
+      expect(Object.keys(store.children)).toEqual([RootSymbol])
+    })
+
+    test('Removes entry from expanded', async () => {
+      // First, add a child to child
+      const subChild = mockStoreEntry({ parent: child.id })
+      store.addEntry(subChild)
+      // Now, expand child
+      store.expanded[child.id] = true
+      // Now, remove the child
+      store.removeEntry(subChild)
+      // Ensure expanded does not contain child
+      expect(Object.keys(store.expanded)).toEqual([RootSymbol])
+    })
+
+    test('Removes parent entry from expanded if this was the only child', async () => {
+      store.expanded[root.id] = true
+      store.removeEntry(child)
+      expect(Object.keys(store.expanded)).toEqual([RootSymbol])
+    })
+    test('Removal of ancestor does not remove all children', async () => {
+      store.removeEntry(root)
+      expect(store.entryMap[child.id]).toBeTruthy()
+    })
   })
 
   describe.todo('Should changes to parent/id update maps?')
