@@ -1,4 +1,5 @@
-import { reactive } from 'vue'
+import { markRaw, reactive } from 'vue'
+import Emittery from 'emittery'
 
 type Ancestor = string | null
 
@@ -42,12 +43,16 @@ export interface SortFunction<T = any> {
   (a: StoreEntry<T>, b: StoreEntry<T>): number
 }
 
+type StoreEvents = {
+  update: undefined
+}
+
 export class Store<T = any> {
   entryMap: EntryMap<T>
   interface: StoreInterface<T>
   expanded: ExpandedMap
   children: ChildrenMap<T>
-
+  emitter: Emittery<StoreEvents>
   constructor (iface: StoreInterface<T>) {
     this.interface = iface
     this.entryMap = reactive({})
@@ -55,6 +60,19 @@ export class Store<T = any> {
       [RootSymbol]: true
     })
     this.children = reactive({})
+    this.emitter = markRaw(new Emittery<StoreEvents>())
+  }
+
+  on<Name extends keyof StoreEvents> (evt: Name | Name[], listener: (eventData: StoreEvents[Name]) => void | Promise<void>): Emittery.UnsubscribeFn {
+    return this.emitter.on(evt, listener)
+  }
+
+  off<Name extends keyof StoreEvents> (evt: Name | Name[], listener: (eventData: StoreEvents[Name]) => void | Promise<void>) {
+    return this.emitter.on(evt, listener)
+  }
+
+  emit<Name extends keyof StoreEvents> (evt: Name, data: StoreEvents[Name]): Promise<void> {
+    return this.emitter.emit(evt, data)
   }
 
   getEntries (ancestor: Ancestor, sort: SortFunction = () => 1, depth?: number, result?: DepthEntryMap<T>) {
@@ -84,7 +102,7 @@ export class Store<T = any> {
     return result
   }
 
-  addEntry (entry: StoreEntry<T>) {
+  addEntry (entry: StoreEntry<T>, emitUpdate = true) {
     const id = this.getId(entry)
     this.entryMap[id] = entry
     const parentId = this.getParent(entry)
@@ -93,10 +111,14 @@ export class Store<T = any> {
       this.children[parentId] = {}
     }
     this.children[parentId][id] = entry
+    if (emitUpdate) {
+      this.emitter.emit('update')
+    }
   }
 
   addEntries (entries: StoreEntry<T>[]) {
-    entries.forEach(this.addEntry, this)
+    entries.forEach(entry => this.addEntry(entry, false))
+    this.emitter.emit('update')
   }
 
   removeEntry (entry: StoreEntry<T>) {
@@ -120,20 +142,33 @@ export class Store<T = any> {
         delete this.expanded[parentId]
       }
     }
+    this.emitter.emit('update')
   }
 
   updateExpanded (id: string, val: boolean) {
+    const old = !!this.expanded[id]
+    let modified = false
     if (!val || this.hasChildren(id)) {
       this.expanded[id] = val
     }
     if (!val) {
       // This folder was just collapsed. We need to collapse all of its descendants
+      // FIXME: This is currently iterating over _all_ expanded entries. Can we improve this?
       for (const expandedId of Object.keys(this.expanded)) {
+        // FIXME: The following check is also making a lot of assumptions
         if (expandedId.startsWith(id)) {
+          modified = true
           // This is a descendant. Mark is as collapsed
+          const old = !!this.expanded[expandedId]
           this.expanded[expandedId] = false
+          if (old) {
+            modified = true
+          }
         }
       }
+    }
+    if (old !== !!this.expanded[id] || modified) {
+      this.emitter.emit('update')
     }
   }
 

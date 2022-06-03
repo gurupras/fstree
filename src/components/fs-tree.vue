@@ -84,12 +84,6 @@ export default defineComponent({
   watch: {
     cwd (v, o) {
       this.onUpdateCWD(v, o)
-    },
-    'store.entryMap': {
-      deep: true,
-      handler () {
-        this.updateContents()
-      }
     }
   },
   computed: {
@@ -123,15 +117,12 @@ export default defineComponent({
   methods: {
     onUpdateCWD (n: string, o?: string, updateContents = true) {
       if (o) {
-        this.updateExpanded(o, false, false)
+        this.updateExpanded(o, false)
       }
       this.updateExpanded(n, true)
     },
-    updateExpanded (id: string, val: boolean, updateContents = true) {
+    updateExpanded (id: string, val: boolean) {
       this.store.updateExpanded(id, val)
-      if (updateContents) {
-        this.updateContents()
-      }
     },
     onSort (column: Column, order: SortOrder, updateContents = true) {
       this.sortColumn = column
@@ -168,11 +159,13 @@ export default defineComponent({
     }
   },
   beforeMount () {
+    this.store.on('update', this.updateContents)
     this.onSort(this.columns[0], SortOrder.Ascending, false)
-    if (this.cwd) {
-      this.onUpdateCWD(this.cwd)
+    this.onUpdateCWD(this.cwd, undefined)
+    if (this.cwd === RootSymbol) {
+      // We need to manually update contents
+      this.updateContents()
     }
-    this.updateContents()
   }
 })
 </script>

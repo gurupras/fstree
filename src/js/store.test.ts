@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, test } from 'vitest'
 import { DepthEntryMap, RootSymbol, Store, StoreEntry } from './store'
-import { mockStore, mockStoreEntry, MockStoreEntry } from './test-utils'
+import { mockStore, mockStoreEntry, MockStoreEntry, testForEvent } from './test-utils'
 
 describe('Store', () => {
   let store: Store
@@ -27,6 +27,12 @@ describe('Store', () => {
 
   test('getParent returns RootSymbol if parent is null', async () => {
     expect(store.getParent(root)).toEqual(RootSymbol)
+  })
+
+  test('Able to emit events', async () => {
+    const promise = testForEvent(store, 'update')
+    expect(() => store.emit('update')).not.toThrow()
+    await expect(promise).resolves.toBeUndefined()
   })
 
   describe('addEntry', () => {
@@ -71,6 +77,12 @@ describe('Store', () => {
       expect(store.children[root.id]).toMatchObject({
         [child.id]: child
       })
+    })
+    test('Emits \'update\' event', async () => {
+      const promise = testForEvent(store, 'update')
+      const child = mockStoreEntry({ parent: root.id })
+      store.addEntry(child)
+      await expect(promise).resolves.toBeUndefined()
     })
   })
 
@@ -121,6 +133,12 @@ describe('Store', () => {
     test('Removal of ancestor does not remove all children', async () => {
       store.removeEntry(root)
       expect(store.entryMap[child.id]).toBeTruthy()
+    })
+
+    test('Emits \'update\' event', async () => {
+      const promise = testForEvent(store, 'update')
+      store.removeEntry(child)
+      await expect(promise).resolves.toBeUndefined()
     })
   })
 
@@ -185,6 +203,31 @@ describe('Store', () => {
 
       store.updateExpanded(root.id, false)
       expect(store.expanded[subdir1.id]).toBeFalsy()
+    })
+
+    test('Emits \'update\' event if expandedMap was modified for given entry', async () => {
+      const dir1 = mockStoreEntry({ name: 'dir1', parent: root.id })
+      store.addEntry(dir1)
+
+      store.expanded[root.id] = true
+      let promise = testForEvent(store, 'update', { timeout: 100 })
+      store.updateExpanded(root.id, false)
+      await expect(promise).resolves.toBeUndefined()
+
+      promise = testForEvent(store, 'update', { timeout: 100 })
+      store.updateExpanded(root.id, true)
+      await expect(promise).resolves.toBeUndefined()
+    })
+
+    test('Does not emit event if expandMap for entry was not modified', async () => {
+      // Root has no children. Try to update expanded
+      let promise = testForEvent(store, 'update', { timeout: 100 })
+      store.updateExpanded(root.id, true)
+      await expect(promise).rejects.toThrow()
+
+      promise = testForEvent(store, 'update', { timeout: 100 })
+      store.updateExpanded(root.id, false)
+      await expect(promise).rejects.toThrow()
     })
   })
 

@@ -30,7 +30,7 @@ describe('FSTree', () => {
   const file1 = mockStoreEntry({ name: 'file1', parent: null, size: 4096 })
 
   let wrapper: VueWrapper<any>
-  beforeEach(() => {
+  beforeEach(async () => {
     store = mockStore<MockStoreEntry>()
     store.addEntries([
       dir1,
@@ -50,12 +50,11 @@ describe('FSTree', () => {
 
       file1
     ])
-    wrapper = mount({
-      cwd: ''
+    wrapper = await mount({
     })
   })
 
-  const mount = (props?: any) => {
+  const mount = async (props?: any) => {
     const wrapper = fullMount(FSTree, {
       props: {
         store,
@@ -63,6 +62,7 @@ describe('FSTree', () => {
         ...props
       }
     })
+    await nextTick()
     return wrapper
   }
 
@@ -82,13 +82,14 @@ describe('FSTree', () => {
   })
 
   describe('Columns', () => {
-    beforeEach(() => {
-      wrapper = mount({
+    beforeEach(async () => {
+      wrapper = await mount({
         columns: [
           NameColumn,
           SizeColumn
         ]
       })
+      await nextTick()
     })
     test('Only mounts specified colums', async () => {
       expect(wrapper.findAll('.column-header').length).toBe(2)

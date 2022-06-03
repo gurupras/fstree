@@ -77,3 +77,33 @@ export function mockStoreEntry (data: any = {}): StoreEntry<MockStoreEntry> {
     ...data
   }
 }
+
+interface EventTestOpts {
+  count?: number
+  timeout?: number
+}
+
+export function testForEvent (obj: any, evt: string, opts: EventTestOpts = {}) {
+  const { count = 1, timeout = 0 } = opts
+  return new Promise((resolve, reject) => {
+    let rejectTimeout: any
+    let failed = true
+    if (timeout) {
+      rejectTimeout = setTimeout(() => {
+        if (failed) {
+          return reject(new Error('Timeout'))
+        }
+      }, timeout)
+    }
+    let counted = 0
+    obj.on(evt, function listener (...args: any[]) {
+      counted++
+      if (!count || (count && counted === count)) {
+        obj.off(evt, listener)
+        failed = false
+        rejectTimeout && clearTimeout(rejectTimeout)
+        resolve(...args)
+      }
+    })
+  })
+}
