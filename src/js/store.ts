@@ -13,25 +13,25 @@ export type StoreEntry<T = any> = T & {
 // }
 
 export interface EntryMap<T = any> {
-  [id: string | symbol]: StoreEntry<T>
+  [id: string]: StoreEntry<T>
 }
 
 export interface ChildrenMap<T = any> {
-  [id: string | symbol]: EntryMap<T>
+  [id: string]: EntryMap<T>
 }
 
 export interface DepthEntry<T = any> {
-  id: string | symbol
+  id: string
   depth: Number
   entry: StoreEntry<T>
 }
 
 export interface DepthEntryMap<T = any> {
-  [id: string | symbol]: DepthEntry<T>
+  [id: string]: DepthEntry<T>
 }
 
 interface ExpandedMap {
-  [key: string | symbol]: Boolean
+  [key: string]: Boolean
 }
 
 interface StoreInterface<T = any> {
@@ -181,7 +181,7 @@ export class Store<T = any> {
   }
 
   hasChildren (entry: StoreEntry<T> | string | Symbol): boolean {
-    let id: string | symbol
+    let id: string
     if (typeof entry === 'object') {
       id = this.getId(entry as StoreEntry<T>)
     } else {
