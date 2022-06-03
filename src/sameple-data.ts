@@ -8,22 +8,7 @@ export default [
     hasChildren: true,
     size: 0,
     type: 'folder',
-    parent: '',
-    name: '/',
-    path: '/',
-    location: '',
-    lastModified: 1652296649833
-  },
-  {
-    separator: '/',
-    isDirectory: true,
-    filePermissions: {
-      canWrite: true
-    },
-    hasChildren: true,
-    size: 0,
-    type: 'folder',
-    parent: '/',
+    parent: null,
     name: 'src',
     path: '/src',
     location: '/',
