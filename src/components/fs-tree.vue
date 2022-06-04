@@ -138,9 +138,7 @@ export default defineComponent({
       }
     },
     onClick (e: MouseEvent) {
-      if (this.selectionPlugin) {
-        this.selectionPlugin.handleSelect(e, this.contentsArray)
-      }
+      this.selectionPlugin?.handleSelect(e, this.contentsArray)
     },
     onKeyUp (e: KeyboardEvent) {
       if (this.keyboardNavigationPlugin) {
@@ -148,9 +146,7 @@ export default defineComponent({
       }
     },
     onRowClick (e: MouseEvent, item: DepthEntry, index: number) {
-      if (this.selectionPlugin) {
-        this.selectionPlugin.handleSelect(e, this.contentsArray, item, index)
-      }
+      this.selectionPlugin?.handleSelect(e, this.contentsArray, item, index)
     },
     async updateContents () {
       const sort = (a: StoreEntry, b: StoreEntry) => this.sortColumn.sort(a, b, this.sortOrder, this.store)

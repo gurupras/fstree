@@ -255,6 +255,13 @@ describe('FSTree', () => {
     })
   })
 
+  test('Ensure updateContents calls selectionPlugin', async () => {
+    const fn = vitest.fn()
+    wrapper.vm.selectionPlugin.onContentsUpdated = fn
+    await wrapper.vm.updateContents()
+    expect(fn).toHaveBeenCalled()
+  })
+
   test('Applies sort before mount', async () => {
     expect(wrapper.vm.sortColumn).toEqual(wrapper.vm.columns[0])
     expect(wrapper.vm.sortOrder).toEqual(SortOrder.Ascending)
