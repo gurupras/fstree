@@ -1,6 +1,8 @@
 import { beforeEach, describe, expect, test } from 'vitest'
+import { SortOrder } from './column'
 import { KeyboardNavigationCallback, KeyboardNavigationPlugin } from './keyboard-navigation'
 import { ContentEntry, ISelectionPlugin, SelectionPlugin } from './selection'
+import { NameSort } from './sort'
 import { DepthEntry, EntryMap, Store, StoreEntry } from './store'
 import { mockStore, mockStoreEntry, MockStoreEntry, fakeKeyboardEvent, fakeMouseEvent, KeyboardEventData } from './test-utils'
 
@@ -17,11 +19,11 @@ describe('Keyboard Navigation', () => {
   beforeEach(() => {
     selection = SelectionPlugin()
     store = mockStore<MockStoreEntry>()
-    topLevelEntries = [...Array(3)].map(x => mockStoreEntry({ name: `top-level-${x}`, parent: null }))
+    topLevelEntries = [...Array(3)].map((_, idx) => mockStoreEntry({ name: `top-level-${idx}`, parent: null }))
     dir1 = mockStoreEntry({ name: 'dir1', parent: null })
-    dir1Children = [...Array(10)].map(x => mockStoreEntry({ parent: dir1.id }))
+    dir1Children = [...Array(10)].map((_, idx) => mockStoreEntry({ name: `dir1-child-${idx}`, parent: dir1.id }))
     subdir1 = mockStoreEntry({ name: 'subdir1', parent: dir1.id })
-    subdir1Children = [...Array(10)].map(x => mockStoreEntry({ parent: subdir1.id }))
+    subdir1Children = [...Array(10)].map((_, idx) => mockStoreEntry({ name: `subdir1-child-${idx}`, parent: subdir1.id }))
     store.addEntries([
       ...topLevelEntries,
       dir1,
@@ -282,6 +284,46 @@ describe('Keyboard Navigation', () => {
       expect(selection.focusedEntry.value).toEqual(previousLastFocused)
       expect(Object.keys(store.expanded)).toEqual(previousExpandedKeys)
     })
+
+    // This test is mostly for coverage
+    test('Does nothing if currently selected element is the first element', async () => {
+      const nameSort = NameSort<MockStoreEntry>('name')
+      // Collapse dir1
+      delete store.expanded[dir1.id]
+      const contents = store.getEntries(null, (a: StoreEntry<MockStoreEntry>, b: StoreEntry<MockStoreEntry>) => nameSort(a, b, SortOrder.Ascending, store))
+      contentsArray = Object.values(contents)
+      const depthEntryIdx = 0
+      const depthEntry = contentsArray[0]
+      selection.handleSelect(fakeMouseEvent(), contentsArray, depthEntry, depthEntryIdx)
+      const previousSelected = { ...selection.selected.value }
+      const previousLastSelected = { ...selection.lastSelectedEntry.value }
+      const previousLastFocused = { ...selection.focusedEntry.value }
+      const previousExpandedKeys = Object.keys(store.expanded)
+
+      onKeyboardNavigation(fakeKeyboardEvent(data), contentsArray, store)
+      expect(selection.selected.value).toEqual(previousSelected)
+      expect(selection.lastSelectedEntry.value).toEqual(previousLastSelected)
+      expect(selection.focusedEntry.value).toEqual(previousLastFocused)
+      expect(Object.keys(store.expanded)).toEqual(previousExpandedKeys)
+    })
+
+    test('Does nothing if currently selected element is the first element', async () => {
+      const entry = dir1Children[0]
+      const depthEntryIdx = contentsArray.findIndex(x => x.id === entry.id)
+      const depthEntry = contentsArray[depthEntryIdx]
+      selection.handleSelect(fakeMouseEvent(), contentsArray, depthEntry, depthEntryIdx)
+      const previousSelected = { ...selection.selected.value }
+      const previousLastSelected = { ...selection.lastSelectedEntry.value }
+      const previousLastFocused = { ...selection.focusedEntry.value }
+      const previousExpandedKeys = Object.keys(store.expanded)
+
+      onKeyboardNavigation(fakeKeyboardEvent(data), contentsArray, store)
+      expect(selection.selected.value).toEqual(previousSelected)
+      expect(selection.lastSelectedEntry.value).toEqual(previousLastSelected)
+      expect(selection.focusedEntry.value).toEqual(previousLastFocused)
+      expect(Object.keys(store.expanded)).toEqual(previousExpandedKeys)
+    })
+
     test('Jumps to parent entry if entry has no children', async () => {
       store.updateExpanded(subdir1.id, true)
       contentsArray = Object.values(store.getEntries(dir1.id))
