@@ -14,7 +14,7 @@ export interface ISelectionPlugin<T = any> {
   handleSelect(e: MouseEvent, contentsArray: Array<DepthEntry>, depthEntry?: DepthEntry<T>, index?: number): void
   updateSelection(e: MouseEvent | KeyboardEvent, contentsArray: Array<DepthEntry>, depthEntry?: DepthEntry<T>, index ?: number): void
   updateFocus(depthEntry?: DepthEntry<T>, index?: number): void
-  onContentUpdated(contentsArray: Array<DepthEntry>, contents: Record<string, DepthEntry<T>>): void
+  onContentsUpdated(contentsArray: Array<DepthEntry>, contents: Record<string, DepthEntry<T>>): void
 }
 
 export function SelectionPlugin<T> (): ISelectionPlugin<T> {
@@ -84,7 +84,7 @@ export function SelectionPlugin<T> (): ISelectionPlugin<T> {
     }
   }
 
-  const onContentUpdated = (contentsArray: Array<DepthEntry<T>>, contents: Record<string, DepthEntry<T>>) => {
+  const onContentsUpdated = (contentsArray: Array<DepthEntry<T>>, contents: Record<string, DepthEntry<T>>) => {
     // We might need to update the indexes of the selected/focused entries
     const prevSelectedEntry = lastSelectedEntry.value
     const prevFocusedEntry = focusedEntry.value
@@ -153,6 +153,6 @@ export function SelectionPlugin<T> (): ISelectionPlugin<T> {
     handleSelect,
     updateSelection,
     updateFocus,
-    onContentUpdated
+    onContentsUpdated
   }
 }

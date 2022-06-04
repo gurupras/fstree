@@ -224,7 +224,7 @@ describe('Selection', () => {
       const oldEntry = contentsArray[selectedIndex].entry
       store.removeEntry(oldEntry)
       updateContents()
-      selection.onContentUpdated(contentsArray, contents)
+      selection.onContentsUpdated(contentsArray, contents)
       expect(selection.lastSelectedEntry.value).toBeNull()
       expect(selection.focusedEntry.value.index).toEqual(selectedIndex)
     })
@@ -234,7 +234,7 @@ describe('Selection', () => {
       const oldEntry = contentsArray[selectedIndex].entry
       store.removeEntry(oldEntry)
       updateContents()
-      selection.onContentUpdated(contentsArray, contents)
+      selection.onContentsUpdated(contentsArray, contents)
       expect(selection.lastSelectedEntry.value.entry.id).toEqual(contentsArray[selectedIndex].entry.id)
       expect(selection.lastSelectedEntry.value.index).toEqual(selectedIndex)
       expect(selection.focusedEntry.value).toBeNull()
@@ -244,7 +244,7 @@ describe('Selection', () => {
       const oldEntry = contentsArray[selectedIndex].entry
       store.removeEntry(oldEntry)
       updateContents()
-      selection.onContentUpdated(contentsArray, contents)
+      selection.onContentsUpdated(contentsArray, contents)
       expect(selection.lastSelectedEntry.value.entry.id).toEqual(contentsArray[selectedIndex].entry.id)
       expect(selection.lastSelectedEntry.value.index).toEqual(selectedIndex)
       expect(selection.focusedEntry.value.index).toEqual(selectedIndex)
@@ -255,7 +255,7 @@ describe('Selection', () => {
       const oldContentEntry = contentsArray[0]
       store.removeEntry(oldContentEntry.entry)
       updateContents()
-      selection.onContentUpdated(contentsArray, contents)
+      selection.onContentsUpdated(contentsArray, contents)
       expect(selection.lastSelectedEntry.value.entry.id).toEqual(contentsArray[0].entry.id)
       expect(selection.lastSelectedEntry.value.index).toEqual(0)
       expect(selection.focusedEntry.value.index).toEqual(0)
@@ -267,7 +267,7 @@ describe('Selection', () => {
       select(selectedIndex)
       store.removeEntry(oldContentEntry.entry)
       updateContents()
-      selection.onContentUpdated(contentsArray, contents)
+      selection.onContentsUpdated(contentsArray, contents)
       expect(selection.lastSelectedEntry.value.entry.id).toEqual(contentsArray[contentsArray.length - 1].entry.id)
       expect(selection.lastSelectedEntry.value.index).toEqual(contentsArray.length - 1)
       expect(selection.focusedEntry.value.index).toEqual(contentsArray.length - 1)
@@ -279,7 +279,7 @@ describe('Selection', () => {
 
       store.addEntry(mockStoreEntry({ name: 'aaaaaaaaaa', parent: dir1.id }))
       updateContents()
-      selection.onContentUpdated(contentsArray, contents)
+      selection.onContentsUpdated(contentsArray, contents)
 
       expect(selection.lastSelectedEntry.value.index).not.toEqual(oldSelection.index)
       expect(selection.lastSelectedEntry.value.entry.id).toEqual(oldSelection.entry.id)
@@ -293,7 +293,7 @@ describe('Selection', () => {
 
       store.addEntry(mockStoreEntry({ name: 'zzzzzzzzzz', parent: dir1.id }))
       updateContents()
-      selection.onContentUpdated(contentsArray, contents)
+      selection.onContentsUpdated(contentsArray, contents)
 
       expect(selection.lastSelectedEntry.value.index).toEqual(oldSelection.index)
       expect(selection.lastSelectedEntry.value.entry.id).toEqual(oldSelection.entry.id)
@@ -307,7 +307,7 @@ describe('Selection', () => {
 
       store.removeEntry(contentsArray[selectedIndex].entry)
       updateContents()
-      expect(() => selection.onContentUpdated(contentsArray, contents)).not.toThrow()
+      expect(() => selection.onContentsUpdated(contentsArray, contents)).not.toThrow()
 
       expect(selection.lastSelectedEntry.value).toBeNull()
       expect(selection.focusedEntry.value).toBeNull()
