@@ -1,4 +1,4 @@
-import { Defaults, FSTreeOptions } from '@/js/fs-tree'
+import { Defaults, FSTreeConfig } from '@/js/fs-tree'
 import { mount as fullMount } from '@vue/test-utils'
 import { test, expect, describe } from 'vitest'
 import NameNode from './name-node.vue'
@@ -19,11 +19,10 @@ describe('NameNode', () => {
   }
 
   test('Passing custom options overrides defaults', async () => {
-    const config: FSTreeOptions = {
-      changeDirectoryOnDoubleClick: true,
-      expandOnRowClick: false
+    const config: FSTreeConfig = {
+      changeDirectoryOnDoubleClick: true
     }
-    const wrapper = await mount({ config })
+    const wrapper = mount({ config })
     expect(wrapper.vm.config).toEqual(config)
   })
 

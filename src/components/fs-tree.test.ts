@@ -9,7 +9,7 @@ import DateModifiedColumnEntry from './date-modified-column-entry.vue'
 import FSTree from './fs-tree.vue'
 import { nextTick } from 'vue'
 import { mockStore, mockStoreEntry, MockStoreEntry, fakeKeyboardEvent, fakeMouseEvent } from '@/js/test-utils'
-import { Defaults, FSTreeOptions } from '@/js/fs-tree'
+import { Defaults, FSTreeConfig } from '@/js/fs-tree'
 
 describe('FSTree', () => {
   let store: Store<MockStoreEntry>
@@ -73,9 +73,8 @@ describe('FSTree', () => {
   })
 
   test('Passing custom options overrides defaults', async () => {
-    const config: FSTreeOptions = {
-      changeDirectoryOnDoubleClick: true,
-      expandOnRowClick: false
+    const config: FSTreeConfig = {
+      changeDirectoryOnDoubleClick: true
     }
     const wrapper = await mount({ config })
     expect(wrapper.vm.config).toEqual(config)

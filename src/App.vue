@@ -36,7 +36,7 @@ onMounted(() => {
 })
 
 const config: FSTreeOptions = {
-  expandOnRowClick: false
+  changeDirectoryOnDoubleClick: true
 }
 </script>
 
