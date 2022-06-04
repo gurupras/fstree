@@ -219,7 +219,7 @@ describe('FSTree', () => {
       wrapper = await mount({ config })
       const nameNodeRoot = wrapper.findAllComponents(NameColumnEntry).find(c => c.vm.name === entry.name)?.find('.tree-node-root')
       expect(nameNodeRoot).toBeTruthy()
-      nameNodeRoot?.trigger('dblclick')
+      nameNodeRoot!.trigger('dblclick')
       expect(wrapper.emitted('update:cwd')).toBeFalsy()
     })
 
@@ -230,7 +230,7 @@ describe('FSTree', () => {
       wrapper = await mount({ config })
       const nameNodeRoot = wrapper.findAllComponents(NameColumnEntry).find(c => c.vm.name === dir2.name)?.find('.tree-node-root')
       expect(nameNodeRoot).toBeTruthy()
-      nameNodeRoot?.trigger('dblclick')
+      nameNodeRoot!.trigger('dblclick')
       expect(wrapper.emitted('update:cwd')).toBeFalsy()
     })
   })
