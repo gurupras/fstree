@@ -71,7 +71,7 @@ export class Store<T = any> {
     return this.emitter.on(evt, listener)
   }
 
-  emit<Name extends keyof StoreEvents> (evt: Name, data: StoreEvents[Name]): Promise<void> {
+  emit<Name extends keyof StoreEvents> (evt: Name, data?: StoreEvents[Name]): Promise<void> {
     return this.emitter.emit(evt, data)
   }
 
@@ -151,21 +151,23 @@ export class Store<T = any> {
     if (!val || this.hasChildren(id)) {
       this.expanded[id] = val
     }
+    const expandedSet = new Set(Object.keys(this.expanded))
     if (!val) {
       // This folder was just collapsed. We need to collapse all of its descendants
-      // FIXME: This is currently iterating over _all_ expanded entries. Can we improve this?
-      for (const expandedId of Object.keys(this.expanded)) {
-        // FIXME: The following check is also making a lot of assumptions
-        if (expandedId.startsWith(id)) {
-          modified = true
-          // This is a descendant. Mark is as collapsed
-          const old = !!this.expanded[expandedId]
-          this.expanded[expandedId] = false
-          if (old) {
+      const recursiveCollapse = (id: string) => {
+        if (!this.hasChildren(id)) {
+          return
+        }
+        const expandedChildIds = Object.keys(this.children).filter(childId => expandedSet.has(childId))
+        for (const childId of expandedChildIds) {
+          if (this.expanded[childId]) {
             modified = true
+            this.expanded[childId] = false
+            recursiveCollapse(childId)
           }
         }
       }
+      recursiveCollapse(id)
     }
     if (old !== !!this.expanded[id] || modified) {
       this.emitter.emit('update')
