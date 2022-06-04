@@ -1,10 +1,10 @@
 <template>
-<div class="tree-node-root" :style="style" @click="$event => $emit('toggle-expand', $event)">
+<div class="tree-node-root" :class="{'expand-on-row-click': config.expandOnRowClick}" :style="style" @click="onRowClick">
   <div class="row">
     <div class="indent"></div>
     <div v-if="hasChildren" class="collapsible-container">
-      <i-mdi-chevron-right v-if="!expanded" class="collapsible collapsed"/>
-      <i-mdi-chevron-down v-else class="collapsible expanded"/>
+      <i-mdi-chevron-right v-if="!expanded" class="collapsible collapsed" @click.stop="onToggleExpand"/>
+      <i-mdi-chevron-down v-else class="collapsible expanded" @click.stop="onToggleExpand"/>
     </div>
     <div class="contents">
       <div v-if="!hasChildren" class="icon-container">
@@ -20,8 +20,11 @@
 </template>
 
 <script lang="ts">
+import type { PropType } from 'vue'
 import { Icon } from '@iconify/vue'
 import { defineComponent } from '@vue/runtime-core'
+import { FSTreeOptions } from '@/js/fs-tree'
+
 export default defineComponent({
   components: {
     Icon
@@ -46,6 +49,10 @@ export default defineComponent({
       default: 0
     },
     icon: {
+    },
+    config: {
+      type: Object as PropType<FSTreeOptions>,
+      required: true
     }
   },
   computed: {
@@ -60,6 +67,14 @@ export default defineComponent({
     }
   },
   methods: {
+    onRowClick (e: MouseEvent) {
+      if (this.config.expandOnRowClick) {
+        this.$emit('toggle-expand', e)
+      }
+    },
+    onToggleExpand (e: MouseEvent) {
+      this.$emit('toggle-expand', e)
+    }
   }
 })
 </script>
@@ -81,7 +96,9 @@ export default defineComponent({
   touch-action: none;
   overflow-x: hidden;
   overflow-y: hidden;
-  cursor: pointer;
+  &.expand-on-row-click {
+    cursor: pointer;
+  }
   height: var(--fstree-row-height);
   line-height: var(--fstree-row-line-height);
   font-size: var(--fstree-name-node-font-size);
@@ -110,6 +127,7 @@ export default defineComponent({
     .collapsible {
       width: var(--fstree-name-node-icon-width);
       height: var(--fstree-name-node-icon-height);
+      cursor: pointer;
       overflow: unset;
     }
   }

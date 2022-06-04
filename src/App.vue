@@ -4,6 +4,7 @@ import FsTree from '@/components/fs-tree.vue'
 import { Store, StoreEntry } from '@/js/store'
 
 import Data from './sameple-data'
+import { FSTreeOptions } from './js/fs-tree'
 
 interface IStoreEntry {
   name: string
@@ -33,12 +34,16 @@ window.store = store
 onMounted(() => {
   window.app = this
 })
+
+const config: FSTreeOptions = {
+  expandOnRowClick: false
+}
 </script>
 
 <template>
 <div class="root container is-flex is-clipped">
   <div class="is-flex is-flex-direction-column is-flex-grow-1 is-clipped">
-    <FsTree :store="store" class="fstree" ref="fstree"/>
+    <FsTree :config="config" :store="store" class="fstree" ref="fstree"/>
   </div>
 </div>
 </template>

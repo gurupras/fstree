@@ -3,6 +3,7 @@ import { test, expect, describe, beforeEach } from 'vitest'
 import { mockStore, mockStoreEntry as GenerateMockStoreEntry } from '@/js/test-utils'
 import NameColumnEntry from './name-column-entry.vue'
 import { Store } from '@/js/store'
+import { Defaults } from '@/js/fs-tree'
 
 // We use something other than 'name' on purpose
 const keyField = 'dummyName'
@@ -38,7 +39,8 @@ describe('NameColumnEntry', () => {
         keyField,
         entryId: entry.id,
         entry,
-        store
+        store,
+        config: Defaults
       }
     })
     expect(wrapper.text()).toEqual(name)

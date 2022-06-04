@@ -25,6 +25,7 @@
               :depth="item.depth"
               :store="store"
               :key-field="col.keyField"
+              :config="config"
               @click.stop="($event: MouseEvent) => onRowClick($event, item, index)"
               @toggle-expand="($event: MouseEvent) => onToggleExpand($event, item.id)"/>
         </div>
@@ -43,6 +44,7 @@ import { RecycleScroller } from 'vue-virtual-scroller'
 
 import { SelectionPlugin } from '@/js/selection'
 import { KeyboardNavigationPlugin } from '@/js/keyboard-navigation'
+import { FSTreeOptions, Defaults } from '@/js/fs-tree'
 
 export default defineComponent({
   components: {
@@ -69,6 +71,12 @@ export default defineComponent({
           SizeColumn,
           DateModifiedColumn
         ]
+      }
+    },
+    config: {
+      type: Object as PropType<FSTreeOptions>,
+      default: () => {
+        return Defaults
       }
     }
   },

@@ -9,6 +9,7 @@ import DateModifiedColumnEntry from './date-modified-column-entry.vue'
 import FSTree from './fs-tree.vue'
 import { nextTick } from 'vue'
 import { mockStore, mockStoreEntry, MockStoreEntry, fakeKeyboardEvent, fakeMouseEvent } from '@/js/test-utils'
+import { Defaults, FSTreeOptions } from '@/js/fs-tree'
 
 describe('FSTree', () => {
   let store: Store<MockStoreEntry>
@@ -65,6 +66,20 @@ describe('FSTree', () => {
     await nextTick()
     return wrapper
   }
+
+  test('Uses default config if nothing is specified', async () => {
+    const wrapper = await mount({ config: undefined })
+    expect(wrapper.vm.config).toEqual(Defaults)
+  })
+
+  test('Passing custom options overrides defaults', async () => {
+    const config: FSTreeOptions = {
+      changeDirectoryOnDoubleClick: true,
+      expandOnRowClick: false
+    }
+    const wrapper = await mount({ config })
+    expect(wrapper.vm.config).toEqual(config)
+  })
 
   test('Clicking $el triggers onClick', async () => {
     const spy = vitest.spyOn(wrapper.vm, 'onClick')
@@ -160,7 +175,8 @@ describe('FSTree', () => {
     test.each([
       ['entry', (entry: DepthEntry) => entry.entry],
       ['depth', (entry: DepthEntry) => entry.depth],
-      ['store', () => store]
+      ['store', () => store],
+      ['config', () => wrapper.vm.config]
     ])('Binds %s', async (key, cb) => {
       const nameEntries = wrapper.findAllComponents(NameColumnEntry)
       for (let idx = 0; idx < wrapper.vm.contentsArray.length; idx++) {

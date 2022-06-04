@@ -1,6 +1,7 @@
 <template>
 <NameNode
             :name="name"
+            :config="config"
             :has-children="store.hasChildren(entryId)"
             :depth="depth"
             icon="vscode-icons:default-file"
@@ -8,6 +9,7 @@
 </template>
 
 <script lang="ts">
+import { FSTreeOptions } from '@/js/fs-tree'
 import { Store, StoreEntry } from '@/js/store'
 import { defineComponent } from '@vue/runtime-core'
 import type { PropType } from 'vue'
@@ -32,6 +34,10 @@ export default defineComponent({
     },
     depth: {
       type: Number
+    },
+    config: {
+      type: Object as PropType<FSTreeOptions>,
+      required: true
     }
   },
   computed: {
