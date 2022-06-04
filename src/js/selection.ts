@@ -14,6 +14,7 @@ export interface ISelectionPlugin<T = any> {
   handleSelect(e: MouseEvent, contentsArray: Array<DepthEntry>, depthEntry?: DepthEntry<T>, index?: number): void
   updateSelection(e: MouseEvent | KeyboardEvent, contentsArray: Array<DepthEntry>, depthEntry?: DepthEntry<T>, index ?: number): void
   updateFocus(depthEntry?: DepthEntry<T>, index?: number): void
+  onContentUpdated(contentsArray: Array<DepthEntry>, contents: Record<string, DepthEntry<T>>): void
 }
 
 export function SelectionPlugin<T> (): ISelectionPlugin<T> {
@@ -83,6 +84,67 @@ export function SelectionPlugin<T> (): ISelectionPlugin<T> {
     }
   }
 
+  const onContentUpdated = (contentsArray: Array<DepthEntry<T>>, contents: Record<string, DepthEntry<T>>) => {
+    // We might need to update the indexes of the selected/focused entries
+    const prevSelectedEntry = lastSelectedEntry.value
+    const prevFocusedEntry = focusedEntry.value
+    if (!prevSelectedEntry && !prevFocusedEntry) {
+      return
+    }
+
+    let newSelectedDepthEntry: DepthEntry<T>
+    let newFocusedDepthEntry: DepthEntry<T>
+    let newSelectedContentEntry: ContentEntry<T> | undefined
+    let newFocusedContentEntry: ContentEntry<T> | undefined
+
+    let newSelectedIdx = -1
+    let newFocusedIdx = -1
+
+    if (prevSelectedEntry) {
+      newSelectedDepthEntry = contents[prevSelectedEntry.entry.id]
+      if (!newSelectedDepthEntry) {
+        newSelectedIdx = Math.min(prevSelectedEntry.index, contentsArray.length - 1)
+        newSelectedDepthEntry = contentsArray[newSelectedIdx]
+        newSelectedContentEntry = { index: newSelectedIdx, entry: newSelectedDepthEntry }
+      }
+    }
+
+    if (prevFocusedEntry) {
+      newFocusedDepthEntry = contents[prevFocusedEntry.index]
+      if (!newFocusedDepthEntry) {
+        newFocusedIdx = Math.min(prevFocusedEntry.index, contentsArray.length - 1)
+        newFocusedDepthEntry = contentsArray[newFocusedIdx]
+        newFocusedContentEntry = { index: newFocusedIdx, entry: newFocusedDepthEntry }
+      }
+    }
+
+    if ((prevSelectedEntry && newSelectedIdx === -1) || (prevFocusedEntry && newFocusedIdx === -1)) {
+      // Either previously selected entry or focused entry exists and we haven't figured out its index yet
+      for (let idx = 0; idx < contentsArray.length; idx++) {
+        const depthEntry = contentsArray[idx]
+        if (prevSelectedEntry && prevSelectedEntry.entry.id === depthEntry.id) {
+          newSelectedContentEntry = { index: idx, entry: depthEntry }
+          newSelectedIdx = idx
+        }
+        if (prevFocusedEntry && prevFocusedEntry.entry.id === depthEntry.id) {
+          newFocusedContentEntry = { index: idx, entry: depthEntry }
+          newFocusedIdx = idx
+        }
+        if ((!prevSelectedEntry || (prevSelectedEntry && newSelectedIdx >= 0)) &&
+            (!prevFocusedEntry || (prevFocusedEntry && newFocusedIdx >= 0))) {
+          break
+        }
+      }
+    }
+
+    if (newSelectedContentEntry) {
+      lastSelectedEntry.value = newSelectedContentEntry
+    }
+    if (newFocusedContentEntry) {
+      updateFocus(newFocusedContentEntry.entry, newFocusedContentEntry.index)
+    }
+  }
+
   return {
     lastSelectedEntry,
     focusedEntry,
@@ -90,6 +152,7 @@ export function SelectionPlugin<T> (): ISelectionPlugin<T> {
     selected,
     handleSelect,
     updateSelection,
-    updateFocus
+    updateFocus,
+    onContentUpdated
   }
 }

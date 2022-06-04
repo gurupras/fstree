@@ -152,10 +152,11 @@ export default defineComponent({
         this.selectionPlugin.handleSelect(e, this.contentsArray, item, index)
       }
     },
-    updateContents () {
+    async updateContents () {
       const sort = (a: StoreEntry, b: StoreEntry) => this.sortColumn.sort(a, b, this.sortOrder, this.store)
       this.contents = this.store.getEntries(this.cwd, sort) || {}
-      console.log('Updated contents', Date.now())
+      await this.$nextTick()
+      this.selectionPlugin.onContentUpdated(this.contentsArray, this.contents)
     }
   },
   beforeMount () {
