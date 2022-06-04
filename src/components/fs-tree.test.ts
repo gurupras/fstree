@@ -198,6 +198,41 @@ describe('FSTree', () => {
       wrapper.findComponent(NameColumnEntry).vm.$emit('toggle-expand')
       expect(fn).toHaveBeenCalledTimes(1)
     })
+
+    test('Double-clicking a row emits \'update:cwd\' event if config option is true', async () => {
+      const config: FSTreeConfig = {
+        changeDirectoryOnDoubleClick: true
+      }
+      wrapper = await mount({ config })
+      const nameNodeRoot = wrapper.findAllComponents(NameColumnEntry).find(c => c.vm.name === dir2.name)?.find('.tree-node-root')
+      expect(nameNodeRoot).toBeTruthy()
+      nameNodeRoot?.trigger('dblclick')
+      expect(wrapper.emitted('update:cwd')?.length).toEqual(1)
+      expect(wrapper.emitted('update:cwd')![0]).toEqual([dir2.id])
+    })
+
+    test('Double-clicking a row that has no children does not emit \'update:cwd\' event', async () => {
+      const entry = file1
+      const config: FSTreeConfig = {
+        changeDirectoryOnDoubleClick: true
+      }
+      wrapper = await mount({ config })
+      const nameNodeRoot = wrapper.findAllComponents(NameColumnEntry).find(c => c.vm.name === entry.name)?.find('.tree-node-root')
+      expect(nameNodeRoot).toBeTruthy()
+      nameNodeRoot?.trigger('dblclick')
+      expect(wrapper.emitted('update:cwd')).toBeFalsy()
+    })
+
+    test('Double-clicking a row does not emit \'update:cwd\' event if config option is false', async () => {
+      const config: FSTreeConfig = {
+        changeDirectoryOnDoubleClick: false
+      }
+      wrapper = await mount({ config })
+      const nameNodeRoot = wrapper.findAllComponents(NameColumnEntry).find(c => c.vm.name === dir2.name)?.find('.tree-node-root')
+      expect(nameNodeRoot).toBeTruthy()
+      nameNodeRoot?.trigger('dblclick')
+      expect(wrapper.emitted('update:cwd')).toBeFalsy()
+    })
   })
 
   describe('Methods', () => {

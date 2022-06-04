@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { onMounted, reactive, ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import FsTree from '@/components/fs-tree.vue'
-import { Store, StoreEntry } from '@/js/store'
+import { RootSymbol, Store, StoreEntry } from '@/js/store'
 
 import Data from './sameple-data'
-import { FSTreeOptions } from './js/fs-tree'
+import { FSTreeConfig } from './js/fs-tree'
 
 interface IStoreEntry {
   name: string
@@ -14,6 +14,8 @@ interface IStoreEntry {
   size: number
   lastModified: number
 }
+
+const cwd = ref(RootSymbol)
 
 const store = new Store<IStoreEntry>({
   getId (entry: StoreEntry<IStoreEntry>) {
@@ -35,7 +37,7 @@ onMounted(() => {
   window.app = this
 })
 
-const config: FSTreeOptions = {
+const config: FSTreeConfig = {
   changeDirectoryOnDoubleClick: true
 }
 </script>
@@ -43,7 +45,7 @@ const config: FSTreeOptions = {
 <template>
 <div class="root container is-flex is-clipped">
   <div class="is-flex is-flex-direction-column is-flex-grow-1 is-clipped">
-    <FsTree :config="config" :store="store" class="fstree" ref="fstree"/>
+    <FsTree :config="config" :store="store" :cwd="cwd" class="fstree" ref="fstree" @update:cwd="val => { cwd = val }"/>
   </div>
 </div>
 </template>

@@ -1,11 +1,16 @@
-import { RequireExactlyOne } from 'type-fest'
+import { MergeExclusive } from 'type-fest'
 
-interface PlainFSTreeConfig {
+interface ExpandOnRowClick {
   expandOnRowClick?: boolean
+}
+
+interface ChangeDirectoryOnDoubleClick {
   changeDirectoryOnDoubleClick?: boolean
 }
 
-export type FSTreeConfig = RequireExactlyOne<PlainFSTreeConfig, 'expandOnRowClick' | 'changeDirectoryOnDoubleClick'>
+type ExclusiveClickConfig = MergeExclusive<ExpandOnRowClick, ChangeDirectoryOnDoubleClick>
+
+export type FSTreeConfig = ExclusiveClickConfig
 
 export const Defaults: FSTreeConfig = {
   expandOnRowClick: true

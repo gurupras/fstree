@@ -9,7 +9,7 @@
 </template>
 
 <script lang="ts">
-import { FSTreeOptions } from '@/js/fs-tree'
+import { FSTreeConfig } from '@/js/fs-tree'
 import { Store, StoreEntry } from '@/js/store'
 import { defineComponent } from '@vue/runtime-core'
 import type { PropType } from 'vue'
@@ -36,7 +36,7 @@ export default defineComponent({
       type: Number
     },
     config: {
-      type: Object as PropType<FSTreeOptions>,
+      type: Object as PropType<FSTreeConfig>,
       required: true
     }
   },

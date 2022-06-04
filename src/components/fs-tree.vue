@@ -27,7 +27,8 @@
               :key-field="col.keyField"
               :config="config"
               @click.stop="($event: MouseEvent) => onRowClick($event, item, index)"
-              @toggle-expand="($event: MouseEvent) => onToggleExpand($event, item.id)"/>
+              @toggle-expand="($event: MouseEvent) => onToggleExpand($event, item.id)"
+              @dblclick="($event: MouseEvent) => onRowDoubleClick($event, item, index)"/>
         </div>
       </div>
     </RecycleScroller>
@@ -44,7 +45,7 @@ import { RecycleScroller } from 'vue-virtual-scroller'
 
 import { SelectionPlugin } from '@/js/selection'
 import { KeyboardNavigationPlugin } from '@/js/keyboard-navigation'
-import { FSTreeOptions, Defaults } from '@/js/fs-tree'
+import { FSTreeConfig, Defaults } from '@/js/fs-tree'
 
 export default defineComponent({
   components: {
@@ -52,7 +53,8 @@ export default defineComponent({
   },
   emits: [
     'expanded',
-    'select'
+    'select',
+    'update:cwd'
   ],
   props: {
     store: {
@@ -74,7 +76,7 @@ export default defineComponent({
       }
     },
     config: {
-      type: Object as PropType<FSTreeOptions>,
+      type: Object as PropType<FSTreeConfig>,
       default: () => {
         return Defaults
       }
@@ -155,6 +157,12 @@ export default defineComponent({
     },
     onRowClick (e: MouseEvent, item: DepthEntry, index: number) {
       this.selectionPlugin?.handleSelect(e, this.contentsArray, item, index)
+    },
+    onRowDoubleClick (e:MouseEvent, item: DepthEntry, index: number) {
+      if (!this.config.changeDirectoryOnDoubleClick || !this.store.hasChildren(item.id)) {
+        return
+      }
+      this.$emit('update:cwd', item.id)
     },
     async updateContents () {
       const sort = (a: StoreEntry, b: StoreEntry) => this.sortColumn.sort(a, b, this.sortOrder, this.store)
