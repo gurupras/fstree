@@ -2,9 +2,9 @@
 <NameNode
             :name="name"
             :config="config"
-            :has-children="store.hasChildren(entryId)"
+            :has-children="parentEntry ? false : store.hasChildren(entryId)"
             :depth="depth"
-            icon="vscode-icons:default-file"
+            :icon="parentEntry ? 'carbon:folder-parent' : 'vscode-icons:default-file'"
             :expanded="store.expanded[entryId]"/>
 </template>
 
@@ -38,6 +38,10 @@ export default defineComponent({
     config: {
       type: Object as PropType<FSTreeConfig>,
       required: true
+    },
+    parentEntry: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {

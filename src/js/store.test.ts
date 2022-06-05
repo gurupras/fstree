@@ -1,19 +1,19 @@
-import { beforeEach, describe, expect, test } from 'vitest'
+import { beforeEach, describe, expect, test, vitest } from 'vitest'
 import { DepthEntryMap, RootSymbol, Store, StoreEntry } from './store'
 import { mockStore, mockStoreEntry, MockStoreEntry, testForEvent } from './test-utils'
 
 describe('Store', () => {
+  let root: StoreEntry<MockStoreEntry>
   let store: Store
-
-  const root: MockStoreEntry = mockStoreEntry({
-    name: '/',
-    id: '/',
-    parent: null,
-    size: 0
-  })
 
   beforeEach(() => {
     store = mockStore<MockStoreEntry>()
+    root = mockStoreEntry({
+      name: '/',
+      id: '/',
+      parent: null,
+      size: 0
+    })
   })
 
   test('getId', () => {
@@ -27,6 +27,20 @@ describe('Store', () => {
 
   test('getParent returns RootSymbol if parent is null', async () => {
     expect(store.getParent(root)).toEqual(RootSymbol)
+  })
+
+  test('getUpOneLevelEntry throws error if interface does not implement it', async () => {
+    const dir1 = mockStoreEntry({ name: 'dir1', parent: root.id })
+    store.entryMap[dir1.id] = dir1
+    store.children[root.id] = {
+      [dir1.id]: dir1
+    }
+    expect(() => store.getUpOneLevelEntry(dir1)).toThrow()
+  })
+
+  test('getUpOneLevelEntry calls interface method when provided', async () => {
+    store.interface.getUpOneLevelEntry = vitest.fn()
+    expect(() => store.getUpOneLevelEntry(root)).not.toThrow()
   })
 
   test('Able to emit events', async () => {
@@ -289,6 +303,59 @@ describe('Store', () => {
         expected[child.id] = { id: child.id, depth: 1, entry: child }
       }
       expect(got).toEqual(expected)
+    })
+  })
+
+  describe('getUpOneLevelEntry', () => {
+    let dir1: StoreEntry<MockStoreEntry>
+    let expected: StoreEntry<MockStoreEntry>
+    beforeEach(() => {
+      dir1 = mockStoreEntry({ name: 'dir1', parent: root.id })
+      expected = {
+        name: '..',
+        ...root as any
+      }
+      store.interface.getUpOneLevelEntry = vitest.fn().mockImplementation((item: StoreEntry<MockStoreEntry>) => expected)
+      store.addEntries([root, dir1])
+    })
+    test('Throws error if interface does not implement method', async () => {
+      store.interface.getUpOneLevelEntry = undefined
+      expect(() => store.getUpOneLevelEntry(dir1)).toThrow()
+    })
+    test('Calls interface method if provided', async () => {
+      expect(() => store.getUpOneLevelEntry(dir1)).not.toThrow()
+      expect(store.interface.getUpOneLevelEntry).toHaveBeenCalledTimes(1)
+      expect(store.interface.getUpOneLevelEntry).toHaveBeenCalledWith(dir1)
+    })
+    test('Returns interface response', async () => {
+      const result = store.getUpOneLevelEntry(dir1)
+      expect(result).toEqual(expected)
+    })
+  })
+
+  describe('isUpOneLevelEntry', () => {
+    let dir1: StoreEntry<MockStoreEntry>
+    beforeEach(() => {
+      dir1 = mockStoreEntry({ name: 'dir1', parent: root.id })
+      store.interface.getUpOneLevelEntry = vitest.fn().mockImplementation((item: StoreEntry<MockStoreEntry>) => {
+        return mockStoreEntry({
+          name: '..',
+          id: root.id,
+          parent: null,
+          size: root.size,
+          lastModified: root.lastModified
+        })
+      })
+      store.addEntries([root, dir1])
+    })
+    test('Returns false for regular entries', async () => {
+      const value = store.isUpOneLevelEntry(dir1)
+      expect(value).toBe(false)
+    })
+
+    test('Returns true for entries obtained via getUpOneLevelEntry', async () => {
+      const upOneLevelEntry = store.getUpOneLevelEntry(dir1)
+      expect(store.isUpOneLevelEntry(upOneLevelEntry)).toBe(true)
     })
   })
 })

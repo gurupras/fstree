@@ -16,7 +16,7 @@
     <RecycleScroller class="scroller"
         :items="contentsArray"
         :item-size="22"
-        v-slot="{ item, index }">
+        v-slot="{ item, index }: { item: import('@/js/store').DepthEntry, index: number }">
       <div class="entry-row" :class="{selected: selectionPlugin.selected.value[item.id], focused: index === selectionPlugin.focusedIndex.value}">
         <div v-for="col in columns" :key="item.id + '-' + col.label" class="entry-column" :style="columnStyles[col.label]">
           <component :is="col.component"
@@ -26,9 +26,10 @@
               :store="store"
               :key-field="col.keyField"
               :config="config"
+              :parent-entry="store.isUpOneLevelEntry(item.entry)"
               @click.stop="($event: MouseEvent) => onRowClick($event, item, index)"
               @toggle-expand="($event: MouseEvent) => onToggleExpand($event, item.id)"
-              @dblclick="($event: MouseEvent) => onRowDoubleClick($event, item, index)"/>
+              @dblclick.stop="($event: MouseEvent) => onRowDoubleClick($event, item, index)"/>
         </div>
       </div>
     </RecycleScroller>
@@ -125,8 +126,8 @@ export default defineComponent({
     }
   },
   methods: {
-    onUpdateCWD (n: string, o?: string, updateContents = true) {
-      if (o) {
+    onUpdateCWD (n: string, o?: string) {
+      if (o && o !== RootSymbol) {
         this.updateExpanded(o, false)
       }
       this.updateExpanded(n, true)
@@ -164,9 +165,20 @@ export default defineComponent({
       }
       this.$emit('update:cwd', item.id)
     },
-    async updateContents () {
+    async updateContents (cwd?: string) {
+      cwd = cwd || this.cwd
       const sort = (a: StoreEntry, b: StoreEntry) => this.sortColumn.sort(a, b, this.sortOrder, this.store)
-      this.contents = this.store.getEntries(this.cwd, sort) || {}
+      this.contents = {}
+      if (cwd !== RootSymbol && this.config.parentEntry) {
+        // We need to add the parent entry first
+        const parentEntry: StoreEntry = this.store.getUpOneLevelEntry(this.store.entryMap[cwd])
+        const parentID = this.store.getId(parentEntry)
+        this.contents[parentID] = { id: this.store.getId(parentEntry), entry: parentEntry, depth: 0 }
+      }
+      const contents = this.store.getEntries(cwd, sort) || {}
+      Object.entries(contents).forEach(([k, v]) => {
+        this.contents[k] = v
+      })
       await this.$nextTick()
       this.selectionPlugin?.onContentsUpdated(this.contentsArray, this.contents)
     }

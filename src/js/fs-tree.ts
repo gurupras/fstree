@@ -6,6 +6,7 @@ interface ExpandOnRowClick {
 
 interface ChangeDirectoryOnDoubleClick {
   changeDirectoryOnDoubleClick?: boolean
+  parentEntry?: boolean
 }
 
 type ExclusiveClickConfig = MergeExclusive<ExpandOnRowClick, ChangeDirectoryOnDoubleClick>

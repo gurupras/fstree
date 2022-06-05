@@ -4,6 +4,7 @@ import Emittery from 'emittery'
 type Ancestor = string | null
 
 export const RootSymbol = Symbol.for('root').toString()
+export const UpOneLevelSymbol = Symbol.for('parent-entry').toString()
 
 export type StoreEntry<T = any> = T & {
   [id: string | symbol]: any
@@ -37,6 +38,7 @@ interface ExpandedMap {
 interface StoreInterface<T = any> {
   getId(entry: StoreEntry<T>): string
   getParent(entry: StoreEntry<T>): Ancestor
+  getUpOneLevelEntry?(entry: StoreEntry<T>): StoreEntry<T>
 }
 
 export interface SortFunction<T = any> {
@@ -180,6 +182,24 @@ export class Store<T = any> {
 
   getParent (entry: StoreEntry<T>) {
     return this.interface.getParent(entry) || RootSymbol
+  }
+
+  getUpOneLevelEntry (entry: StoreEntry<T>): StoreEntry<T> {
+    if (!this.interface.getUpOneLevelEntry) {
+      throw new Error('Provided interface does not implement getUpOneLevelEntry()')
+    }
+    const parentEntry: StoreEntry = this.interface.getUpOneLevelEntry(entry)
+    if (parentEntry) {
+      parentEntry[UpOneLevelSymbol] = true
+    }
+    return parentEntry
+  }
+
+  isUpOneLevelEntry (entry: StoreEntry<T>): boolean {
+    if (entry[UpOneLevelSymbol]) {
+      return true
+    }
+    return false
   }
 
   hasChildren (entry: StoreEntry<T> | string | Symbol): boolean {

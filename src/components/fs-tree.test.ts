@@ -320,13 +320,22 @@ describe('FSTree', () => {
       expect(fn).toHaveBeenCalledTimes(1)
       expect(fn).toHaveBeenCalledWith(evt, wrapper.vm.contentsArray, store)
     })
-  })
 
-  test('Ensure updateContents calls selectionPlugin', async () => {
-    const fn = vitest.fn()
-    wrapper.vm.selectionPlugin.onContentsUpdated = fn
-    await wrapper.vm.updateContents()
-    expect(fn).toHaveBeenCalled()
+    test('Ensure updateContents adds parent-entry as first entry if config option is true', async () => {
+      store.interface.getUpOneLevelEntry = vitest.fn().mockImplementation((entry: StoreEntry<MockStoreEntry>) => {
+        return store.entryMap[entry.parent]
+      })
+      const config: FSTreeConfig = {
+        changeDirectoryOnDoubleClick: true,
+        parentEntry: true
+      }
+      wrapper = await mount({ config })
+      wrapper.vm.updateContents(subdir1.id)
+      await nextTick()
+      const firstDepthEntry: DepthEntry = wrapper.vm.contentsArray[0]
+      const entry = firstDepthEntry.entry
+      expect(store.getId(entry)).toEqual(dir1.id)
+    })
   })
 
   test('Applies sort before mount', async () => {

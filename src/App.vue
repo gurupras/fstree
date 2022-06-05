@@ -22,10 +22,35 @@ const store = new Store<IStoreEntry>({
     return entry.path
   },
   getParent (entry: StoreEntry<IStoreEntry>) {
-    if (entry.parent === '') {
+    if (!entry.parent) {
       return null
     }
     return entry.parent as string
+  },
+  getUpOneLevelEntry (entry: StoreEntry<IStoreEntry>): StoreEntry<IStoreEntry> {
+    let parent: StoreEntry<IStoreEntry> | null = null
+    const parentID = this.getParent(entry)
+    if (!parentID) {
+      // We need to send back the root entry
+      parent = {
+        name: '', // Overridden below
+        path: RootSymbol,
+        parent: '',
+        hasChildren: true,
+        size: 0,
+        lastModified: entry.lastModified
+      }
+    } else {
+      parent = store.entryMap[parentID]
+    }
+    return {
+      name: '..',
+      path: parent.path,
+      parent: RootSymbol,
+      hasChildren: false,
+      size: 0,
+      lastModified: parent.lastModified
+    }
   }
 })
 
@@ -38,14 +63,16 @@ onMounted(() => {
 })
 
 const config: FSTreeConfig = {
-  changeDirectoryOnDoubleClick: true
+  changeDirectoryOnDoubleClick: true,
+  parentEntry: true
 }
 </script>
 
 <template>
 <div class="root container is-flex is-clipped">
   <div class="is-flex is-flex-direction-column is-flex-grow-1 is-clipped">
-    <FsTree :config="config" :store="store" :cwd="cwd" class="fstree" ref="fstree" @update:cwd="val => { cwd = val }"/>
+    <FsTree :config="config" :store="store" :cwd="cwd" class="fstree" ref="fstree"
+        @update:cwd="val => { cwd = val }"/>
   </div>
 </div>
 </template>
