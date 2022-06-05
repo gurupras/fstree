@@ -275,6 +275,20 @@ describe('FSTree', () => {
       expect(store.updateExpanded).toHaveBeenCalledWith(dir1.id, false)
     })
 
+    test('Calling updateContents with no argument uses component\'s cwd', async () => {
+      store.getEntries = vitest.fn().mockReturnValue({})
+      wrapper.vm.updateContents()
+      expect(store.getEntries).toHaveBeenCalledTimes(1)
+      expect(store.getEntries).toHaveBeenCalledWith(wrapper.vm.cwd, expect.any(Function))
+    })
+
+    test('Ensure updateContents calls selectionPlugin', async () => {
+      const fn = vitest.fn()
+      wrapper.vm.selectionPlugin.onContentsUpdated = fn
+      await wrapper.vm.updateContents()
+      expect(fn).toHaveBeenCalled()
+    })
+
     test('onSort updates sortColumn', async () => {
       wrapper.vm.onSort(NameColumn, SortOrder.Descending)
       expect(wrapper.vm.sortColumn).toEqual(NameColumn)
