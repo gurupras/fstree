@@ -219,6 +219,22 @@ describe('Store', () => {
       expect(store.expanded[subdir1.id]).toBeFalsy()
     })
 
+    test('Collapsing any entry does not collapse ancestors', async () => {
+      const dir1 = mockStoreEntry({ name: 'dir1', parent: null })
+      const subdir1 = mockStoreEntry({ name: 'subdir1', parent: dir1.id })
+      const subdir2 = mockStoreEntry({ name: 'subdir2', parent: subdir1.id })
+      const subdir2Children: StoreEntry<MockStoreEntry>[] = [...Array(3)].map(x => mockStoreEntry({ parent: subdir2.id }))
+      store.addEntries([dir1, subdir1, subdir2, ...subdir2Children])
+      store.expanded[dir1.id] = true
+      store.expanded[subdir1.id] = true
+      store.expanded[subdir2.id] = true
+
+      store.updateExpanded(subdir2.id, false)
+      expect(store.expanded[RootSymbol]).toBe(true)
+      expect(store.expanded[dir1.id]).toBe(true)
+      expect(store.expanded[subdir1.id]).toBe(true)
+    })
+
     test('Emits \'update\' event if expandedMap was modified for given entry', async () => {
       const dir1 = mockStoreEntry({ name: 'dir1', parent: root.id })
       store.addEntry(dir1)

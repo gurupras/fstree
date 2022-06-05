@@ -160,7 +160,7 @@ export class Store<T = any> {
         if (!this.hasChildren(id)) {
           return
         }
-        const expandedChildIds = Object.keys(this.children).filter(childId => expandedSet.has(childId))
+        const expandedChildIds = Object.keys(this.children[id]).filter(childId => expandedSet.has(childId))
         for (const childId of expandedChildIds) {
           if (this.expanded[childId]) {
             modified = true
