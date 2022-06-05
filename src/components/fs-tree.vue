@@ -55,7 +55,8 @@ export default defineComponent({
   emits: [
     'expanded',
     'select',
-    'update:cwd'
+    'update:cwd',
+    'open'
   ],
   props: {
     store: {
@@ -152,6 +153,15 @@ export default defineComponent({
       this.selectionPlugin?.handleSelect(e, this.contentsArray)
     },
     onKeyUp (e: KeyboardEvent) {
+      if (this.selectionPlugin && e.key === 'Enter') {
+        const depthEntry = this.selectionPlugin.focusedEntry.value?.entry
+        if (!depthEntry) {
+          // No focused entry
+          return
+        }
+        this.$emit('open', depthEntry.entry)
+        return
+      }
       if (this.keyboardNavigationPlugin) {
         this.keyboardNavigationPlugin.onKeyboardNavigation(e, this.contentsArray, this.store)
       }

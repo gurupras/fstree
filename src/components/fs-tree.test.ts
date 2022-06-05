@@ -335,6 +335,44 @@ describe('FSTree', () => {
       expect(fn).toHaveBeenCalledWith(evt, wrapper.vm.contentsArray, store)
     })
 
+    test('Pressing enter key when no entry is focused does nothing', async () => {
+      wrapper.vm.selectionPlugin.focusedEntry.value = null
+      const evt = fakeKeyboardEvent({ key: 'Enter' })
+      wrapper.vm.onKeyUp(evt)
+      expect(wrapper.emitted('open')).toBeFalsy()
+    })
+
+    test('Pressing enter key when an entry is focused triggers onKeyUp', async () => {
+      const fn = vitest.fn()
+      wrapper.vm.onKeyUp = fn
+      const idx = 0
+      const depthEntry = wrapper.vm.contentsArray[idx]
+      wrapper.vm.selectionPlugin.focusedEntry.value = { index: idx, entry: depthEntry, depth: 0 }
+      const evt = fakeKeyboardEvent({ key: 'Enter' })
+      wrapper.vm.onKeyUp(evt)
+      expect(fn).toHaveBeenCalledTimes(1)
+    })
+
+    test('Pressing enter key when an entry is focused does not trigger keyboardNavigation.onKeyboardNavigation', async () => {
+      const spy = vitest.spyOn(wrapper.vm.keyboardNavigationPlugin, 'onKeyboardNavigation')
+      const idx = 0
+      const depthEntry = wrapper.vm.contentsArray[idx]
+      wrapper.vm.selectionPlugin.focusedEntry.value = { index: idx, entry: depthEntry, depth: 0 }
+      const evt = fakeKeyboardEvent({ key: 'Enter' })
+      wrapper.vm.onKeyUp(evt)
+      expect(spy).not.toHaveBeenCalled()
+    })
+
+    test('Calling onKeyUp with enter key triggers \'open\' event on focused entry', async () => {
+      const idx = 0
+      const depthEntry = wrapper.vm.contentsArray[idx]
+      wrapper.vm.selectionPlugin.focusedEntry.value = { index: idx, entry: depthEntry, depth: 0 }
+      const evt = fakeKeyboardEvent({ key: 'Enter' })
+      wrapper.vm.onKeyUp(evt)
+      expect(wrapper.emitted('open')?.length).toEqual(1)
+      expect(wrapper.emitted('open')![0]).toEqual([depthEntry.entry])
+    })
+
     test('Ensure updateContents adds parent-entry as first entry if config option is true', async () => {
       store.interface.getUpOneLevelEntry = vitest.fn().mockImplementation((entry: StoreEntry<MockStoreEntry>) => {
         return store.entryMap[entry.parent]

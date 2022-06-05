@@ -56,6 +56,12 @@ const store = new Store<IStoreEntry>({
 
 store.addEntries(Data as any as StoreEntry<IStoreEntry>[])
 
+const onOpen = (entry: StoreEntry<IStoreEntry>) => {
+  if (store.hasChildren(entry)) {
+    cwd.value = entry.path
+  }
+}
+
 window.store = store
 
 onMounted(() => {
@@ -72,7 +78,8 @@ const config: FSTreeConfig = {
 <div class="root container is-flex is-clipped">
   <div class="is-flex is-flex-direction-column is-flex-grow-1 is-clipped">
     <FsTree :config="config" :store="store" :cwd="cwd" class="fstree" ref="fstree"
-        @update:cwd="val => { cwd = val }"/>
+        @update:cwd="val => { cwd = val }"
+        @open="onOpen"/>
   </div>
 </div>
 </template>
