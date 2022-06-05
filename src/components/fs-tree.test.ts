@@ -1,7 +1,7 @@
 import { mount as fullMount, VueWrapper } from '@vue/test-utils'
 import { test, expect, describe, beforeEach, vitest } from 'vitest'
 import { NameColumn, SizeColumn, SortOrder } from '@/js/column'
-import { DepthEntry, RootSymbol, Store } from '@/js/store'
+import { DepthEntry, RootSymbol, Store, StoreEntry } from '@/js/store'
 import Column from './column.vue'
 import NameColumnEntry from './name-column-entry.vue'
 import SizeColumnEntry from './size-column-entry.vue'
@@ -236,6 +236,23 @@ describe('FSTree', () => {
   })
 
   describe('Methods', () => {
+    test('Calling onUpdateCWD expands the entry', async () => {
+      wrapper.vm.onUpdateCWD(dir2.id)
+      expect(store.expanded[dir2.id]).toBe(true)
+    })
+    test('Does not crash when calling onUpdateCWD with null/undefined as second argument', async () => {
+      for (const val of [null, undefined]) {
+        expect(() => wrapper.vm.onUpdateCWD(dir2.id, val)).not.toThrow()
+      }
+    })
+    test('Updating cwd from RootSymbol does not collapse it', async () => {
+      wrapper.vm.onUpdateCWD(dir2.id, RootSymbol)
+      expect(store.expanded[RootSymbol]).toBe(true)
+    })
+    test('Updating cwd from something other than RootSymbol collapses previous entry', async () => {
+      wrapper.vm.onUpdateCWD(dir2.id, dir1.id)
+      expect(store.expanded[dir1.id]).toBe(false)
+    })
     test('Updating cwd calls onUpdateCWD', async () => {
       const spy = vitest.spyOn(wrapper.vm, 'onUpdateCWD')
       wrapper.setProps({ cwd: dir1.id })
