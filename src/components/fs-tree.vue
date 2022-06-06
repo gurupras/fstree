@@ -337,7 +337,6 @@ export default defineComponent({
       :deep(.vue-recycle-scroller__item-wrapper) {
         display: table;
         table-layout: fixed;
-        height: 100%;
 
         .vue-recycle-scroller__item-view {
           display: table-row;
