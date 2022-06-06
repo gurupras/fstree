@@ -65,7 +65,7 @@ export default defineComponent({
     },
     onMouseMove () {
       const dx = mouse.x - this.x
-      this.$emit('resize', `${this.w + dx}px`)
+      this.$emit('resize', this.w + dx)
     },
     onMouseUp () {
       document.removeEventListener('mousemove', this.onMouseMove)
@@ -88,7 +88,7 @@ export default defineComponent({
   mounted () {
     const styles = getComputedStyle(this.$el)
     const width = parseInt(styles.width, 10)
-    this.$emit('resize', `${width}px`)
+    this.$emit('resize', width)
   }
 })
 </script>
@@ -96,8 +96,6 @@ export default defineComponent({
 <style lang="scss" scoped>
 .column-root {
   position: relative;
-  display: flex;
-  align-items: center;
   text-align: left;
   border: 1px solid grey;
   &:last-child {

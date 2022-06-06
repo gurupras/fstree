@@ -110,12 +110,11 @@ describe('FSTree', () => {
       expect(wrapper.findAllComponents(Column).length).toBe(2)
     })
     test('Applies column-specific styles', async () => {
-      const width = '24px'
+      const width = 24
       wrapper.vm.columnWidths[NameColumn.label] = width
       await nextTick()
       const style = getComputedStyle(wrapper.find('.column-header').element)
-      expect(style.getPropertyValue('min-width')).toEqual(width)
-      expect(style.getPropertyValue('max-width')).toEqual(width)
+      expect(style.getPropertyValue('width')).toEqual(`${width}px`)
     })
     test('Binds column label properly', async () => {
       expect(wrapper.findComponent(Column).vm.label).toEqual(NameColumn.label)

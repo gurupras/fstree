@@ -99,8 +99,8 @@ export default defineComponent({
   &.expand-on-row-click {
     cursor: pointer;
   }
-  height: var(--fstree-row-height);
-  line-height: var(--fstree-row-line-height);
+  height: inherit;
+  line-height: inherit;
   font-size: var(--fstree-name-node-font-size);
 
   .row {
