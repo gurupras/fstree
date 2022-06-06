@@ -95,7 +95,7 @@ html, body, #app {
 <style lang="scss" scoped>
 @import 'bulma/bulma.sass';
 .container {
-  height: 100%;
-  background-color: var(--fstree-background-color);
+  height: 60%;
+  resize: both;
 }
 </style>
