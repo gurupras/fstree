@@ -232,6 +232,30 @@ describe('FSTree', () => {
       nameNodeRoot!.trigger('dblclick')
       expect(wrapper.emitted('update:cwd')).toBeFalsy()
     })
+
+    test('Reflects asynchronous store updates', async () => {
+      // Set it up so that dir1 reports having children even though it has none in the store
+      [...dir1Children, subdir1, ...subdir1Children].forEach(entry => store.removeEntry(entry))
+      await nextTick()
+      store.interface.hasChildren = vitest.fn().mockImplementation((entry: StoreEntry | string) => {
+        const entryID: string = typeof entry === 'object' ? store.getId(entry) : entry
+        if (entryID === dir1.id || entryID === subdir1.id) {
+          return true
+        }
+        return Object.keys(store.children[entryID] || {}).length > 0
+      })
+      expect(store.hasChildren(RootSymbol)).toBe(true)
+      expect(store.hasChildren(dir1)).toBe(true)
+      expect(store.getEntries(dir1.id, (a, b) => 1, 0)).toMatchObject({})
+      wrapper.setProps({ cwd: dir1.id })
+      await nextTick()
+      expect(wrapper.vm.contentsArray).toEqual([])
+      store.addEntries([
+        ...dir1Children
+      ])
+      await nextTick()
+      expect(wrapper.vm.contentsArray.map((x: StoreEntry<MockStoreEntry>) => x.id).sort()).toEqual(dir1Children.map(x => x.id).sort())
+    })
   })
 
   describe('Methods', () => {

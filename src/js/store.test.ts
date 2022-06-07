@@ -163,6 +163,13 @@ describe('Store', () => {
     beforeEach(() => {
       child = mockStoreEntry({ parent: root.id })
     })
+    test('Returns true for root when no interface implementation is presennt', async () => {
+      expect(store.hasChildren(RootSymbol)).toBe(true)
+    })
+    test('Returns true for root when interface implementation is presennt', async () => {
+      store.interface.hasChildren = vitest.fn().mockReturnValue(false)
+      expect(store.hasChildren(RootSymbol)).toBe(true)
+    })
     test.each([
       ['StoreEntry', () => root, true],
       ['String', () => root.id, true]
@@ -183,6 +190,26 @@ describe('Store', () => {
       const child = mockStoreEntry({ parent: root.id })
       store.addEntry(child)
       expect(store.hasChildren(root)).toBe(true)
+    })
+    test('Uses interface.hasChildren if provided', async () => {
+      const child = mockStoreEntry({ parent: root.id })
+      store.addEntries([root, child])
+      expect(store.hasChildren(root)).toBe(true)
+      // Now add the interface method and test that
+      store.interface.hasChildren = vitest.fn().mockReturnValue(false)
+      expect(store.hasChildren(root)).toBe(false)
+      expect(store.interface.hasChildren).toHaveBeenCalledTimes(1)
+      expect(store.interface.hasChildren).toHaveBeenCalledWith(root)
+    })
+
+    test('Ensures interface.hasChildren is called with StoreEntry even if hasChildren is called with string', async () => {
+      const child = mockStoreEntry({ parent: root.id })
+      store.addEntries([root, child])
+      // Now add the interface method and test that
+      store.interface.hasChildren = vitest.fn().mockReturnValue(false)
+      expect(store.hasChildren(root.id)).toBe(false)
+      expect(store.interface.hasChildren).toHaveBeenCalledTimes(1)
+      expect(store.interface.hasChildren).toHaveBeenCalledWith(root)
     })
   })
 

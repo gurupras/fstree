@@ -38,6 +38,7 @@ interface ExpandedMap {
 interface StoreInterface<T = any> {
   getId(entry: StoreEntry<T>): string
   getParent(entry: StoreEntry<T>): Ancestor
+  hasChildren?(entry: StoreEntry<T>): boolean
   getUpOneLevelEntry?(entry: StoreEntry<T>): StoreEntry<T>
 }
 
@@ -202,16 +203,26 @@ export class Store<T = any> {
     return false
   }
 
-  hasChildren (entry: StoreEntry<T> | string | Symbol): boolean {
-    let id: string
-    if (typeof entry === 'object') {
-      id = this.getId(entry as StoreEntry<T>)
+  hasChildren (entry: StoreEntry<T> | string): boolean {
+    if (entry === RootSymbol) {
+      return true
+    }
+    if (this.interface.hasChildren) {
+      if (typeof entry === 'string') {
+        entry = this.entryMap[entry]
+      }
+      return this.interface.hasChildren(entry)
     } else {
-      id = entry as string
+      let id: string
+      if (typeof entry === 'object') {
+        id = this.getId(entry as StoreEntry<T>)
+      } else {
+        id = entry as string
+      }
+      if (!this.children[id]) {
+        return false
+      }
+      return Object.keys(this.children[id]).length !== 0
     }
-    if (!this.children[id]) {
-      return false
-    }
-    return Object.keys(this.children[id]).length !== 0
   }
 }

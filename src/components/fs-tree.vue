@@ -204,7 +204,6 @@ export default defineComponent({
       Object.entries(contents).forEach(([k, v]) => {
         this.contents[k] = v
       })
-      await this.$nextTick()
       this.selectionPlugin?.onContentsUpdated(this.contentsArray, this.contents)
     },
     onResizeColumn (index: number, newWidth: number) {
