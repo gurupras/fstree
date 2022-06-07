@@ -27,6 +27,7 @@
         <div class="entry-row" :class="{selected: selectionPlugin.selected.value[item.id], focused: index === selectionPlugin.focusedIndex.value}">
           <div v-for="col in columns" :key="item.id + '-' + col.label" class="entry-column table-cell" :style="columnStyles[col.label]">
             <component :is="col.component"
+                :data-test="'col-' + col.label"
                 :entry-id="item.id"
                 :entry="item.entry"
                 :depth="item.depth"
