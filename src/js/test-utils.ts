@@ -107,3 +107,11 @@ export function testForEvent (obj: any, evt: string, opts: EventTestOpts = {}) {
     })
   })
 }
+
+export function toObject<T> (m: Map<string, T>): Record<string, T> {
+  const ret: any = {}
+  for (const [key, value] of m.entries()) {
+    ret[key] = value
+  }
+  return ret
+}

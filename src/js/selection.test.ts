@@ -52,8 +52,8 @@ describe('Selection', () => {
     test('Clicking on an entry selects it', async () => {
       for (let idx = 0; idx < contentsArray.length; idx += 4) {
         selection.handleSelect(fakeMouseEvent(), contentsArray, contentsArray[idx], idx)
-        expect(Object.keys(selection.selected.value).length).toBe(1)
-        expect(selection.selected.value[contentsArray[idx].id]).toBeTruthy()
+        expect(selection.selected.value.size).toBe(1)
+        expect(selection.selected.value.has(contentsArray[idx].id)).toBeTruthy()
       }
     })
 
@@ -62,25 +62,25 @@ describe('Selection', () => {
       selectedIndexes.forEach(idx => {
         const depthEntry = contentsArray[idx]
         // Select the entry
-        selection.selected.value[depthEntry.id] = depthEntry.entry
+        selection.selected.value.set(depthEntry.id, depthEntry.entry)
       })
       selection.handleSelect(fakeMouseEvent(), contentsArray)
-      expect(selection.selected.value).toEqual({})
+      expect(selection.selected.value.size).toEqual(0)
     })
 
     describe('Shift+Click', () => {
       test('Selects entry if nothing else was selected', async () => {
         const idx = 4
         selection.handleSelect(fakeMouseEvent({ shiftKey: true }), contentsArray, contentsArray[idx], idx)
-        expect(Object.keys(selection.selected.value).length).toBe(1)
-        expect(selection.selected.value[contentsArray[idx].id]).toEqual(contentsArray[idx].entry)
+        expect(selection.selected.value.size).toBe(1)
+        expect(selection.selected.value.get(contentsArray[idx].id)).toEqual(contentsArray[idx].entry)
       })
 
       test('Works on zero-index entry', async () => {
         const idx = 0
         selection.handleSelect(fakeMouseEvent({ shiftKey: true }), contentsArray, contentsArray[idx], idx)
-        expect(Object.keys(selection.selected.value).length).toBe(1)
-        expect(selection.selected.value[contentsArray[idx].id]).toEqual(contentsArray[idx].entry)
+        expect(selection.selected.value.size).toBe(1)
+        expect(selection.selected.value.get(contentsArray[idx].id)).toEqual(contentsArray[idx].entry)
       })
 
       test('Subsequent entry when an entry is already selected selects everything in between (inclusive)', async () => {
@@ -88,12 +88,12 @@ describe('Selection', () => {
         const endIdx = 6
         selection.handleSelect(fakeMouseEvent(), contentsArray, contentsArray[startIdx], startIdx)
         selection.handleSelect(fakeMouseEvent({ shiftKey: true }), contentsArray, contentsArray[endIdx], endIdx)
-        expect(Object.keys(selection.selected.value).length).toBe(Math.abs(endIdx - startIdx) + 1)
+        expect(selection.selected.value.size).toBe(Math.abs(endIdx - startIdx) + 1)
 
         const loopStart = Math.min(startIdx, endIdx)
         const loopEnd = Math.max(startIdx, endIdx)
         for (let idx = loopStart; idx <= loopEnd; idx++) {
-          expect(selection.selected.value[contentsArray[idx].id]).toEqual(contentsArray[idx].entry)
+          expect(selection.selected.value.get(contentsArray[idx].id)).toEqual(contentsArray[idx].entry)
         }
       })
 
@@ -102,12 +102,12 @@ describe('Selection', () => {
         const endIdx = 1
         selection.handleSelect(fakeMouseEvent(), contentsArray, contentsArray[startIdx], startIdx)
         selection.handleSelect(fakeMouseEvent({ shiftKey: true }), contentsArray, contentsArray[endIdx], endIdx)
-        expect(Object.keys(selection.selected.value).length).toBe(Math.abs(endIdx - startIdx) + 1)
+        expect(selection.selected.value.size).toBe(Math.abs(endIdx - startIdx) + 1)
 
         const loopStart = Math.min(startIdx, endIdx)
         const loopEnd = Math.max(startIdx, endIdx)
         for (let idx = loopStart; idx <= loopEnd; idx++) {
-          expect(selection.selected.value[contentsArray[idx].id]).toEqual(contentsArray[idx].entry)
+          expect(selection.selected.value.get(contentsArray[idx].id)).toEqual(contentsArray[idx].entry)
         }
       })
 
@@ -116,13 +116,13 @@ describe('Selection', () => {
         selectedIndexes.forEach(idx => {
           const depthEntry = contentsArray[idx]
           // Select the entry
-          selection.selected.value[depthEntry.id] = depthEntry.entry
+          selection.selected.value.set(depthEntry.id, depthEntry.entry)
         })
         // Select whitespace
         selection.updateSelection(fakeMouseEvent({ shiftKey: true }), contentsArray)
 
         // Assert that selection has been cleared
-        expect(selection.selected.value).toEqual({})
+        expect(selection.selected.value.size).toEqual(0)
       })
     })
 
@@ -135,9 +135,9 @@ describe('Selection', () => {
         for (let idx = 0; idx < contentsArray.length; idx += 4) {
           selection.handleSelect(fakeMouseEvent({ [key]: true }), contentsArray, contentsArray[idx], idx)
           selected.push(contentsArray[idx].id as string)
-          expect(Object.keys(selection.selected.value).length).toEqual(selected.length)
+          expect(selection.selected.value.size).toEqual(selected.length)
           selected.forEach(id => {
-            expect(selection.selected.value[id]).toEqual(store.entryMap[id])
+            expect(selection.selected.value.get(id)).toEqual(store.entryMap.get(id))
           })
         }
       })
@@ -146,13 +146,13 @@ describe('Selection', () => {
         selectedIndexes.forEach(idx => {
           const depthEntry = contentsArray[idx]
           // Select the entry
-          selection.selected.value[depthEntry.id] = depthEntry.entry
+          selection.selected.value.set(depthEntry.id, depthEntry.entry)
         })
 
         const deselectionIndex = selectedIndexes[0]
         const depthEntry = contentsArray[deselectionIndex]
         selection.handleSelect(fakeMouseEvent({ [key]: true }), contentsArray, depthEntry, deselectionIndex)
-        expect(selection.selected.value[depthEntry.id]).toBeFalsy()
+        expect(selection.selected.value.has(depthEntry.id)).toBeFalsy()
       })
 
       test('Behaves the same if Shift is also held', async () => {
@@ -161,20 +161,20 @@ describe('Selection', () => {
           const depthEntry = contentsArray[idx]
           // Select the entry
           selection.updateSelection(fakeMouseEvent({ [key]: true, shiftKey: true }), contentsArray, depthEntry, idx)
-          expect(selection.selected.value[depthEntry.id]).toEqual(depthEntry.entry)
+          expect(selection.selected.value.get(depthEntry.id)).toEqual(depthEntry.entry)
         })
 
         const deselectionIndex = selectedIndexes[0]
         const depthEntry = contentsArray[deselectionIndex]
         selection.handleSelect(fakeMouseEvent({ [key]: true, shiftKey: true }), contentsArray, depthEntry, deselectionIndex)
-        expect(selection.selected.value[depthEntry.id]).toBeFalsy()
+        expect(selection.selected.value.has(depthEntry.id)).toBeFalsy()
 
         // Remaining selected indexes
         const remainingSelectedIndexes = selectedIndexes.slice(1)
         // Check that the remaining are selected
         remainingSelectedIndexes.forEach(idx => {
           const depthEntry = contentsArray[idx]
-          expect(selection.selected.value[depthEntry.id]).toEqual(depthEntry.entry)
+          expect(selection.selected.value.get(depthEntry.id)).toEqual(depthEntry.entry)
         })
       })
 
@@ -183,13 +183,13 @@ describe('Selection', () => {
         selectedIndexes.forEach(idx => {
           const depthEntry = contentsArray[idx]
           // Select the entry
-          selection.selected.value[depthEntry.id] = depthEntry.entry
+          selection.selected.value.set(depthEntry.id, depthEntry.entry)
         })
         // Select whitespace
         selection.updateSelection(fakeMouseEvent({ [key]: true }), contentsArray)
 
         // Assert that selection has been cleared
-        expect(selection.selected.value).toEqual({})
+        expect(selection.selected.value.size).toEqual(0)
       })
     })
   })

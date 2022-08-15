@@ -13,13 +13,9 @@ export type StoreEntry<T = any> = T & {
 //   [id: string | symbol]: any
 // }
 
-export interface EntryMap<T = any> {
-  [id: string]: StoreEntry<T>
-}
+export type EntryMap<T = any> = Map<string, StoreEntry<T>>
 
-export interface ChildrenMap<T = any> {
-  [id: string]: EntryMap<T>
-}
+export type ChildrenMap<T = any> = Map<string, EntryMap<T>>
 
 export interface DepthEntry<T = any> {
   id: string
@@ -58,11 +54,11 @@ export class Store<T = any> {
   emitter: Emittery<StoreEvents>
   constructor (iface: StoreInterface<T>) {
     this.interface = iface
-    this.entryMap = reactive({})
+    this.entryMap = reactive(new Map())
     this.expanded = reactive({
       [RootSymbol]: true
     })
-    this.children = reactive({})
+    this.children = reactive(new Map())
     this.emitter = markRaw(new Emittery<StoreEvents>())
   }
 
@@ -92,11 +88,15 @@ export class Store<T = any> {
       return result
     }
     // Iterate over the direct children
-    const childrenEntryMap = this.children[ancestorId]
+    const childrenEntryMap = this.children.get(ancestorId)
     if (!childrenEntryMap) {
       return result
     }
-    const entries = Object.entries(childrenEntryMap)
+
+    const entries: [string, StoreEntry<T>][] = []
+    for (const entry of childrenEntryMap.entries()) {
+      entries.push(entry)
+    }
     const sortedEntries = entries.sort((a, b) => sort(a[1], b[1]))
     for (const [id, entry] of sortedEntries) {
       result[id] = { id, depth, entry }
@@ -107,13 +107,13 @@ export class Store<T = any> {
 
   addEntry (entry: StoreEntry<T>, emitUpdate = true) {
     const id = this.getId(entry)
-    this.entryMap[id] = entry
+    this.entryMap.set(id, entry)
     const parentId = this.getParent(entry)
 
-    if (!this.children[parentId]) {
-      this.children[parentId] = {}
+    if (!this.children.has(parentId)) {
+      this.children.set(parentId, new Map())
     }
-    this.children[parentId][id] = entry
+    this.children.get(parentId)!.set(id, entry)
     if (emitUpdate) {
       this.emitter.emit('update')
     }
@@ -126,22 +126,17 @@ export class Store<T = any> {
 
   removeEntry (entry: StoreEntry<T>) {
     const id = this.getId(entry)
-    delete this.entryMap[id]
+    this.entryMap.delete(id)
     delete this.expanded[id]
 
     const parentId = this.getParent(entry)
 
-    if (this.children[parentId]) {
-      delete this.children[parentId][id]
-      let isEmpty = true
-      // eslint-disable-next-line no-unreachable-loop
-      for (const _ in this.children[parentId]) {
-        isEmpty = false
-        break
-      }
-      if (isEmpty) {
+    if (this.children.has(parentId)) {
+      const parentMap = this.children.get(parentId)!
+      parentMap.delete(id)
+      if (parentMap.size === 0) {
         // Parent is empty. So remove it's expanded
-        delete this.children[parentId]
+        this.children.delete(parentId)
         delete this.expanded[parentId]
       }
     }
@@ -161,7 +156,14 @@ export class Store<T = any> {
         if (!this.hasChildren(id)) {
           return
         }
-        const expandedChildIds = Object.keys(this.children[id]).filter(childId => expandedSet.has(childId))
+
+        const expandedChildIds: string[] = []
+        for (const childId of this.children.get(id)!.keys()) {
+          if (expandedSet.has(childId)) {
+            expandedChildIds.push(childId)
+          }
+        }
+
         for (const childId of expandedChildIds) {
           if (this.expanded[childId]) {
             modified = true
@@ -209,7 +211,7 @@ export class Store<T = any> {
     }
     if (this.interface.hasChildren) {
       if (typeof entry === 'string') {
-        entry = this.entryMap[entry]
+        entry = this.entryMap.get(entry)!
       }
       return this.interface.hasChildren(entry)
     } else {
@@ -219,10 +221,10 @@ export class Store<T = any> {
       } else {
         id = entry as string
       }
-      if (!this.children[id]) {
+      if (!this.children.has(id)) {
         return false
       }
-      return Object.keys(this.children[id]).length !== 0
+      return this.children.get(id)!.size > 0
     }
   }
 }

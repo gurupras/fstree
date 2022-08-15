@@ -1,7 +1,7 @@
 import { beforeAll, beforeEach, describe, expect, test, vitest } from 'vitest'
 import { SortOrder } from './column'
 import { DateModifiedSort, NameSort, SizeSort, StoreSortFunction } from './sort'
-import { SortFunction, Store, StoreEntry } from './store'
+import { Store, StoreEntry } from './store'
 import { TestEntries } from './test-data-sort'
 
 describe('Sort', () => {

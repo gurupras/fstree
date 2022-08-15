@@ -242,7 +242,7 @@ describe('FSTree', () => {
         if (entryID === dir1.id || entryID === subdir1.id) {
           return true
         }
-        return Object.keys(store.children[entryID] || {}).length > 0
+        return store.children.has(entryID) && store.children.get(entryID)!.size > 0
       })
       expect(store.hasChildren(RootSymbol)).toBe(true)
       expect(store.hasChildren(dir1)).toBe(true)
@@ -398,7 +398,7 @@ describe('FSTree', () => {
 
     test('Ensure updateContents adds parent-entry as first entry if config option is true', async () => {
       store.interface.getUpOneLevelEntry = vitest.fn().mockImplementation((entry: StoreEntry<MockStoreEntry>) => {
-        return store.entryMap[entry.parent]
+        return store.entryMap.get(entry.parent)
       })
       const config: FSTreeConfig = {
         changeDirectoryOnDoubleClick: true,

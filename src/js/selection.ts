@@ -21,7 +21,7 @@ export function SelectionPlugin<T> (): ISelectionPlugin<T> {
   const lastSelectedEntry = ref<ContentEntry>(null as any as ContentEntry)
   const focusedEntry = ref<ContentEntry>(null as any as ContentEntry)
   const focusedIndex = computed(() => focusedEntry.value?.index)
-  const selected = ref<EntryMap<T>>({})
+  const selected = ref<EntryMap<T>>(new Map())
 
   const handleSelect = (e: MouseEvent, contentsArray: Array<DepthEntry<T>>, depthEntry?: DepthEntry<T>, index ?: number) => {
     updateSelection(e, contentsArray, depthEntry, index)
@@ -43,29 +43,29 @@ export function SelectionPlugin<T> (): ISelectionPlugin<T> {
     // Because we use the virtual-scroller, it inserts its own wrappers along the way.
     // As a result, the selected row ends up being the parent of .entry-row
     if (!depthEntry || index === undefined) {
-      selected.value = {}
+      selected.value = new Map()
       return
     }
     if (!e.shiftKey && !(e.metaKey || e.ctrlKey)) {
       // Replace with just this item being selected
-      selected.value = {
-        [depthEntry.id]: depthEntry.entry
-      }
+      const m = new Map()
+      m.set(depthEntry.id, depthEntry.entry)
+      selected.value = m
     } else if (e.ctrlKey || e.metaKey) {
       // Add this entry to selected
-      if (selected.value[depthEntry.id]) {
-        delete selected.value[depthEntry.id]
+      if (selected.value.has(depthEntry.id)) {
+        selected.value.delete(depthEntry.id)
       } else {
-        selected.value[depthEntry.id] = depthEntry.entry
+        selected.value.set(depthEntry.id, depthEntry.entry)
       }
     } else if (e.shiftKey) {
       // We need to find all elements between the last selected entry and this one and replace all selected items with just those
       if (!lastSelectedEntry.value) {
         // There was no previously selected entry.
         // Only select this entry
-        selected.value = {
-          [depthEntry.id]: depthEntry.entry
-        }
+        const m = new Map()
+        m.set(depthEntry.id, depthEntry.entry)
+        selected.value = m
         return
       }
 
@@ -79,7 +79,7 @@ export function SelectionPlugin<T> (): ISelectionPlugin<T> {
       // Now, we just need to select all entries between idx1 and idx2
       const selectedDepthEntries = contentsArray.slice(idx1, idx2 + 1)
       selectedDepthEntries.forEach(depthEntry => {
-        selected.value[depthEntry.id] = depthEntry.entry
+        selected.value.set(depthEntry.id, depthEntry.entry)
       })
     }
   }

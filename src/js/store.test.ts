@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, test, vitest } from 'vitest'
 import { DepthEntryMap, RootSymbol, Store, StoreEntry } from './store'
-import { mockStore, mockStoreEntry, MockStoreEntry, testForEvent } from './test-utils'
+import { mockStore, mockStoreEntry, MockStoreEntry, testForEvent, toObject } from './test-utils'
 
 describe('Store', () => {
   let root: StoreEntry<MockStoreEntry>
@@ -31,10 +31,10 @@ describe('Store', () => {
 
   test('getUpOneLevelEntry throws error if interface does not implement it', async () => {
     const dir1 = mockStoreEntry({ name: 'dir1', parent: root.id })
-    store.entryMap[dir1.id] = dir1
-    store.children[root.id] = {
-      [dir1.id]: dir1
-    }
+    store.entryMap.set(dir1.id, dir1)
+    const m: Map<string, StoreEntry<MockStoreEntry>> = new Map()
+    m.set(dir1.id, dir1)
+    store.children.set(root.id, m)
     expect(() => store.getUpOneLevelEntry(dir1)).toThrow()
   })
 
@@ -53,34 +53,34 @@ describe('Store', () => {
     test('Adds it to the store', async () => {
       const entry = mockStoreEntry()
       expect(() => store.addEntry(entry)).not.toThrow()
-      expect(Object.keys(store.entryMap).length).toEqual(1)
+      expect(store.entryMap.size).toEqual(1)
     })
     test('Updates entryMap', async () => {
       const entry1 = mockStoreEntry()
       const entry2 = mockStoreEntry()
       store.addEntry(entry1)
       store.addEntry(entry2)
-      expect(store.entryMap[entry1.id]).toEqual(entry1)
-      expect(store.entryMap[entry2.id]).toEqual(entry2)
+      expect(store.entryMap.get(entry1.id)).toEqual(entry1)
+      expect(store.entryMap.get(entry2.id)).toEqual(entry2)
     })
     test('Updates children map', async () => {
       store.addEntry(root)
       const child = mockStoreEntry({ parent: root.id })
       store.addEntry(child)
-      expect(store.children[root.id]).toMatchObject({
+      expect(toObject(store.children.get(root.id)!)).toMatchObject({
         [child.id]: child
       })
     })
     test('Parent of null makes it child of root entry', async () => {
       store.addEntry(root)
-      expect(store.children[RootSymbol]).toMatchObject({
+      expect(toObject(store.children.get(RootSymbol)!)).toMatchObject({
         [root.id]: root
       })
     })
     test('Without parent still update children map', async () => {
       const child = mockStoreEntry({ parent: root.id })
       store.addEntry(child)
-      expect(store.children[root.id]).toMatchObject({
+      expect(toObject(store.children.get(root.id)!)).toMatchObject({
         [child.id]: child
       })
     })
@@ -88,7 +88,7 @@ describe('Store', () => {
       const child = mockStoreEntry({ parent: root.id })
       store.addEntry(child)
       store.addEntry(root)
-      expect(store.children[root.id]).toMatchObject({
+      expect(toObject(store.children.get(root.id)!)).toMatchObject({
         [child.id]: child
       })
     })
@@ -109,22 +109,22 @@ describe('Store', () => {
 
     test('Removes entry from entryMap', async () => {
       store.removeEntry(child)
-      expect(Object.keys(store.entryMap)).toEqual([root.id])
+      expect([...store.entryMap.keys()]).toEqual([root.id])
     })
 
     test('Removes entry from children map', async () => {
       const child1 = mockStoreEntry({ parent: root.id })
       store.addEntry(child1)
       store.removeEntry(child)
-      expect(Object.keys(store.children)).toEqual([RootSymbol, root.id])
-      expect(Object.keys(store.children[root.id])).toEqual([
+      expect([...store.children.keys()]).toEqual([RootSymbol, root.id])
+      expect([...store.children.get(root.id)!.keys()]).toEqual([
         child1.id
       ])
     })
 
     test('Removes parent entry from children map if this was the only child', async () => {
       store.removeEntry(child)
-      expect(Object.keys(store.children)).toEqual([RootSymbol])
+      expect([...store.children.keys()]).toEqual([RootSymbol])
     })
 
     test('Removes entry from expanded', async () => {
@@ -146,7 +146,7 @@ describe('Store', () => {
     })
     test('Removal of ancestor does not remove all children', async () => {
       store.removeEntry(root)
-      expect(store.entryMap[child.id]).toBeTruthy()
+      expect(store.entryMap.has(child.id)).toBeTruthy()
     })
 
     test('Emits \'update\' event', async () => {

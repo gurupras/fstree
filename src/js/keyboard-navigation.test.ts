@@ -4,7 +4,7 @@ import { KeyboardNavigationCallback, KeyboardNavigationPlugin } from './keyboard
 import { ContentEntry, ISelectionPlugin, SelectionPlugin } from './selection'
 import { NameSort } from './sort'
 import { DepthEntry, EntryMap, Store, StoreEntry } from './store'
-import { mockStore, mockStoreEntry, MockStoreEntry, fakeKeyboardEvent, fakeMouseEvent, KeyboardEventData } from './test-utils'
+import { mockStore, mockStoreEntry, MockStoreEntry, fakeKeyboardEvent, fakeMouseEvent, KeyboardEventData, toObject } from './test-utils'
 
 describe('Keyboard Navigation', () => {
   let store: Store<MockStoreEntry>
@@ -50,7 +50,7 @@ describe('Keyboard Navigation', () => {
       // Now press the key
       onKeyboardNavigation(fakeKeyboardEvent(data), contentsArray, store)
       // Assert that the state is the same
-      expect(selection.selected.value).toEqual({
+      expect(toObject(selection.selected.value)).toEqual({
         [entry.id]: entry
       })
       expect(selection.focusedEntry.value).toEqual({ index: idx, entry: depthEntry })
@@ -63,7 +63,7 @@ describe('Keyboard Navigation', () => {
       const entry = depthEntry.entry
       selection.handleSelect(fakeMouseEvent(), contentsArray, depthEntry, idx)
       // Ensure state is as expected
-      expect(selection.selected.value).toEqual({
+      expect(toObject(selection.selected.value)).toEqual({
         [entry.id]: entry
       })
       expect(selection.focusedEntry.value).toEqual({ index: idx, entry: depthEntry })
@@ -72,7 +72,7 @@ describe('Keyboard Navigation', () => {
       // Now press the key
       onKeyboardNavigation(fakeKeyboardEvent(data), contentsArray, store)
       // Assert that the state is the same
-      expect(selection.selected.value).toEqual({
+      expect(toObject(selection.selected.value)).toEqual({
         [entry.id]: entry
       })
       expect(selection.focusedEntry.value).toEqual({ index: idx, entry: depthEntry })
@@ -84,7 +84,7 @@ describe('Keyboard Navigation', () => {
       const entry = depthEntry.entry
       selection.handleSelect(fakeMouseEvent(), contentsArray, depthEntry, idx)
       // Ensure state is as expected
-      expect(selection.selected.value).toEqual({
+      expect(toObject(selection.selected.value)).toEqual({
         [entry.id]: entry
       })
       expect(selection.focusedEntry.value).toEqual({ index: idx, entry: depthEntry })
@@ -95,7 +95,7 @@ describe('Keyboard Navigation', () => {
       const expectedDepthEntry = contentsArray[idx - 1]
       const expectedEntry = expectedDepthEntry.entry
       // Assert that the state is the same
-      expect(selection.selected.value).toEqual({
+      expect(toObject(selection.selected.value)).toEqual({
         [expectedEntry.id]: expectedEntry
       })
       expect(selection.focusedEntry.value).toEqual({ index: idx - 1, entry: expectedDepthEntry })
@@ -114,7 +114,7 @@ describe('Keyboard Navigation', () => {
         const previousDepthEntry = contentsArray[idx - 1]
         const previousEntry = previousDepthEntry.entry
 
-        expect(selection.selected.value).toEqual({
+        expect(toObject(selection.selected.value)).toEqual({
           [entry.id]: entry,
           [previousEntry.id]: previousEntry
         })
@@ -135,7 +135,7 @@ describe('Keyboard Navigation', () => {
       // Now press the key
       onKeyboardNavigation(fakeKeyboardEvent(data), contentsArray, store)
       // Assert that the state is the same
-      expect(selection.selected.value).toEqual({
+      expect(toObject(selection.selected.value)).toEqual({
         [entry.id]: entry
       })
       expect(selection.focusedEntry.value).toEqual({ index: idx, entry: depthEntry })
@@ -148,7 +148,7 @@ describe('Keyboard Navigation', () => {
       const entry = depthEntry.entry
       selection.handleSelect(fakeMouseEvent(), contentsArray, depthEntry, idx)
       // Ensure state is as expected
-      expect(selection.selected.value).toEqual({
+      expect(toObject(selection.selected.value)).toEqual({
         [entry.id]: entry
       })
       expect(selection.focusedEntry.value).toEqual({ index: idx, entry: depthEntry })
@@ -157,7 +157,7 @@ describe('Keyboard Navigation', () => {
       // Now press the key
       onKeyboardNavigation(fakeKeyboardEvent(data), contentsArray, store)
       // Assert that the state is the same
-      expect(selection.selected.value).toEqual({
+      expect(toObject(selection.selected.value)).toEqual({
         [entry.id]: entry
       })
       expect(selection.focusedEntry.value).toEqual({ index: idx, entry: depthEntry })
@@ -169,7 +169,7 @@ describe('Keyboard Navigation', () => {
       const entry = depthEntry.entry
       selection.handleSelect(fakeMouseEvent(), contentsArray, depthEntry, idx)
       // Ensure state is as expected
-      expect(selection.selected.value).toEqual({
+      expect(toObject(selection.selected.value)).toEqual({
         [entry.id]: entry
       })
       expect(selection.focusedEntry.value).toEqual({ index: idx, entry: depthEntry })
@@ -180,7 +180,7 @@ describe('Keyboard Navigation', () => {
       const expectedDepthEntry = contentsArray[idx + 1]
       const expectedEntry = expectedDepthEntry.entry
       // Assert that the state is the same
-      expect(selection.selected.value).toEqual({
+      expect(toObject(selection.selected.value)).toEqual({
         [expectedEntry.id]: expectedEntry
       })
       expect(selection.focusedEntry.value).toEqual({ index: idx + 1, entry: expectedDepthEntry })
@@ -200,7 +200,7 @@ describe('Keyboard Navigation', () => {
         const nextDepthEntry = contentsArray[idx + 1]
         const nextEntry = nextDepthEntry.entry
 
-        expect(selection.selected.value).toEqual({
+        expect(toObject(selection.selected.value)).toEqual({
           [entry.id]: entry,
           [nextEntry.id]: nextEntry
         })
@@ -217,13 +217,13 @@ describe('Keyboard Navigation', () => {
       const depthEntryIdx = contentsArray.findIndex(x => x.id === entry.id)
       const depthEntry = contentsArray[depthEntryIdx]
       selection.handleSelect(fakeMouseEvent(), contentsArray, depthEntry, depthEntryIdx)
-      const previousSelected = { ...selection.selected.value }
+      const previousSelected = toObject(selection.selected.value)
       const previousLastSelected = { ...selection.lastSelectedEntry.value }
       const previousLastFocused = { ...selection.focusedEntry.value }
       const previousExpandedKeys = Object.keys(store.expanded)
 
       onKeyboardNavigation(fakeKeyboardEvent(data), contentsArray, store)
-      expect(selection.selected.value).toEqual(previousSelected)
+      expect(toObject(selection.selected.value)).toEqual(previousSelected)
       expect(selection.lastSelectedEntry.value).toEqual(previousLastSelected)
       expect(selection.focusedEntry.value).toEqual(previousLastFocused)
       expect(Object.keys(store.expanded)).toEqual(previousExpandedKeys)
@@ -250,7 +250,7 @@ describe('Keyboard Navigation', () => {
         depthEntryIdx = contentsArray.findIndex(x => x.id === entry.id)
         depthEntry = contentsArray[depthEntryIdx]
         selection.handleSelect(fakeMouseEvent(), contentsArray, depthEntry, depthEntryIdx)
-        previousSelected = { ...selection.selected.value }
+        previousSelected = selection.selected.value
         previousLastSelected = { ...selection.lastSelectedEntry.value }
         previousLastFocused = { ...selection.focusedEntry.value }
         previousExpandedKeys = Object.keys(store.expanded)
@@ -258,7 +258,7 @@ describe('Keyboard Navigation', () => {
       test('Does nothing', async () => {
         onKeyboardNavigation(fakeKeyboardEvent(shiftData), contentsArray, store)
 
-        expect(selection.selected.value).toEqual(previousSelected)
+        expect(toObject(selection.selected.value)).toEqual(toObject(previousSelected))
         expect(selection.lastSelectedEntry.value).toEqual(previousLastSelected)
         expect(selection.focusedEntry.value).toEqual(previousLastFocused)
         expect(Object.keys(store.expanded)).toEqual(previousExpandedKeys)
@@ -273,13 +273,13 @@ describe('Keyboard Navigation', () => {
       const depthEntryIdx = contentsArray.findIndex(x => x.id === entry.id)
       const depthEntry = contentsArray[depthEntryIdx]
       selection.handleSelect(fakeMouseEvent(), contentsArray, depthEntry, depthEntryIdx)
-      const previousSelected = { ...selection.selected.value }
+      const previousSelected = toObject(selection.selected.value)
       const previousLastSelected = { ...selection.lastSelectedEntry.value }
       const previousLastFocused = { ...selection.focusedEntry.value }
       const previousExpandedKeys = Object.keys(store.expanded)
 
       onKeyboardNavigation(fakeKeyboardEvent(data), contentsArray, store)
-      expect(selection.selected.value).toEqual(previousSelected)
+      expect(toObject(selection.selected.value)).toEqual(previousSelected)
       expect(selection.lastSelectedEntry.value).toEqual(previousLastSelected)
       expect(selection.focusedEntry.value).toEqual(previousLastFocused)
       expect(Object.keys(store.expanded)).toEqual(previousExpandedKeys)
@@ -295,13 +295,13 @@ describe('Keyboard Navigation', () => {
       const depthEntryIdx = 0
       const depthEntry = contentsArray[0]
       selection.handleSelect(fakeMouseEvent(), contentsArray, depthEntry, depthEntryIdx)
-      const previousSelected = { ...selection.selected.value }
+      const previousSelected = toObject(selection.selected.value)
       const previousLastSelected = { ...selection.lastSelectedEntry.value }
       const previousLastFocused = { ...selection.focusedEntry.value }
       const previousExpandedKeys = Object.keys(store.expanded)
 
       onKeyboardNavigation(fakeKeyboardEvent(data), contentsArray, store)
-      expect(selection.selected.value).toEqual(previousSelected)
+      expect(toObject(selection.selected.value)).toEqual(previousSelected)
       expect(selection.lastSelectedEntry.value).toEqual(previousLastSelected)
       expect(selection.focusedEntry.value).toEqual(previousLastFocused)
       expect(Object.keys(store.expanded)).toEqual(previousExpandedKeys)
@@ -312,13 +312,13 @@ describe('Keyboard Navigation', () => {
       const depthEntryIdx = contentsArray.findIndex(x => x.id === entry.id)
       const depthEntry = contentsArray[depthEntryIdx]
       selection.handleSelect(fakeMouseEvent(), contentsArray, depthEntry, depthEntryIdx)
-      const previousSelected = { ...selection.selected.value }
+      const previousSelected = toObject(selection.selected.value)
       const previousLastSelected = { ...selection.lastSelectedEntry.value }
       const previousLastFocused = { ...selection.focusedEntry.value }
       const previousExpandedKeys = Object.keys(store.expanded)
 
       onKeyboardNavigation(fakeKeyboardEvent(data), contentsArray, store)
-      expect(selection.selected.value).toEqual(previousSelected)
+      expect(toObject(selection.selected.value)).toEqual(previousSelected)
       expect(selection.lastSelectedEntry.value).toEqual(previousLastSelected)
       expect(selection.focusedEntry.value).toEqual(previousLastFocused)
       expect(Object.keys(store.expanded)).toEqual(previousExpandedKeys)
@@ -331,7 +331,7 @@ describe('Keyboard Navigation', () => {
       const depthEntryIdx = contentsArray.findIndex(x => x.id === entry.id)
       const depthEntry = contentsArray[depthEntryIdx]
       selection.handleSelect(fakeMouseEvent(), contentsArray, depthEntry, depthEntryIdx)
-      expect(selection.selected.value).toEqual({
+      expect(toObject(selection.selected.value)).toEqual({
         [entry.id]: entry
       })
       expect(selection.lastSelectedEntry.value).toEqual({ index: depthEntryIdx, entry: depthEntry })
@@ -363,13 +363,13 @@ describe('Keyboard Navigation', () => {
         const depthEntryIdx = contentsArray.findIndex(x => x.id === entry.id)
         const depthEntry = contentsArray[depthEntryIdx]
         selection.handleSelect(fakeMouseEvent(), contentsArray, depthEntry, depthEntryIdx)
-        const previousSelected = { ...selection.selected.value }
+        const previousSelected = toObject(selection.selected.value)
         const previousLastSelected = { ...selection.lastSelectedEntry.value }
         const previousLastFocused = { ...selection.focusedEntry.value }
         const previousExpandedKeys = Object.keys(store.expanded)
 
         onKeyboardNavigation(fakeKeyboardEvent(shiftData), contentsArray, store)
-        expect(selection.selected.value).toEqual(previousSelected)
+        expect(toObject(selection.selected.value)).toEqual(previousSelected)
         expect(selection.lastSelectedEntry.value).toEqual(previousLastSelected)
         expect(selection.focusedEntry.value).toEqual(previousLastFocused)
         expect(Object.keys(store.expanded)).toEqual(previousExpandedKeys)
@@ -386,7 +386,7 @@ describe('Keyboard Navigation', () => {
 
         onKeyboardNavigation(fakeKeyboardEvent(keyData), contentsArray, store)
 
-        expect(selection.selected.value).toEqual({})
+        expect(toObject(selection.selected.value)).toEqual({})
         expect(selection.lastSelectedEntry.value).toBeNull()
         expect(selection.focusedEntry.value).toBeNull()
         expect(store.expanded).toEqual({})
@@ -401,13 +401,13 @@ describe('Keyboard Navigation', () => {
       const depthEntry = contentsArray[idx]
 
       selection.handleSelect(fakeMouseEvent(), contentsArray, depthEntry, idx)
-      const previousSelected = { ...selection.selected.value }
+      const previousSelected = toObject(selection.selected.value)
       const previousLastSelected = { ...selection.lastSelectedEntry.value }
       const previousLastFocused = { ...selection.focusedEntry.value }
       const previousExpandedKeys = Object.keys(store.expanded)
 
       onKeyboardNavigation(fakeKeyboardEvent(data), contentsArray, store)
-      expect(selection.selected.value).toEqual(previousSelected)
+      expect(toObject(selection.selected.value)).toEqual(previousSelected)
       expect(selection.lastSelectedEntry.value).toEqual(previousLastSelected)
       expect(selection.focusedEntry.value).toEqual(previousLastFocused)
       expect(Object.keys(store.expanded)).toEqual(previousExpandedKeys)
@@ -418,13 +418,13 @@ describe('Keyboard Navigation', () => {
 
       selection.focusedEntry.value = { index: idx, entry: depthEntry }
 
-      const previousSelected = { ...selection.selected.value }
+      const previousSelected = toObject(selection.selected.value)
       expect(selection.lastSelectedEntry.value).toBeNull()
       const previousLastFocused = { ...selection.focusedEntry.value }
       const previousExpandedKeys = Object.keys(store.expanded)
 
       onKeyboardNavigation(fakeKeyboardEvent(data), contentsArray, store)
-      expect(selection.selected.value).toEqual(previousSelected)
+      expect(toObject(selection.selected.value)).toEqual(previousSelected)
       expect(selection.lastSelectedEntry.value).toBeNull()
       expect(selection.focusedEntry.value).toEqual(previousLastFocused)
       expect(Object.keys(store.expanded)).toEqual(previousExpandedKeys)
@@ -439,9 +439,8 @@ describe('Keyboard Navigation', () => {
         const depthEntry = contentsArray[idx]
         const entry = depthEntry.entry
         // Ensure some entry is selected prior
-        const priorSelection = {
-          [contentsArray[0].id]: contentsArray[0].entry
-        }
+        const priorSelection = new Map()
+        priorSelection.set(contentsArray[0].id, contentsArray[0].entry)
         selection.selected.value = priorSelection
 
         // Focus on the next entry
@@ -449,8 +448,8 @@ describe('Keyboard Navigation', () => {
 
         onKeyboardNavigation(fakeKeyboardEvent(keyData), contentsArray, store)
         // Ensure entry is selected in addition to prior selection
-        expect(selection.selected.value).toEqual({
-          ...priorSelection,
+        expect(toObject(selection.selected.value)).toEqual({
+          ...toObject(priorSelection),
           [entry.id]: entry
         })
         // Ensure lastSelectedEntry is updated
@@ -462,10 +461,9 @@ describe('Keyboard Navigation', () => {
         const depthEntry = contentsArray[idx]
         const entry = depthEntry.entry
         // Ensure some entries are selected prior
-        const priorSelection = {
-          [contentsArray[0].id]: contentsArray[0].entry,
-          [entry.id]: depthEntry
-        }
+        const priorSelection = new Map()
+        priorSelection.set(contentsArray[0].id, contentsArray[0].entry)
+        priorSelection.set(entry.id, depthEntry)
         selection.selected.value = priorSelection
 
         // Focus on the next entry
@@ -473,8 +471,8 @@ describe('Keyboard Navigation', () => {
 
         onKeyboardNavigation(fakeKeyboardEvent(keyData), contentsArray, store)
         // Ensure entry is de-selected
-        expect(selection.selected.value).toEqual({
-          ...priorSelection,
+        expect(toObject(selection.selected.value)).toEqual({
+          ...toObject(priorSelection),
           [entry.id]: undefined
         })
         // Ensure lastSelectedEntry is updated
@@ -486,9 +484,8 @@ describe('Keyboard Navigation', () => {
         const depthEntry = contentsArray[idx]
 
         // Ensure some entry is selected prior
-        const priorSelection = {
-          [contentsArray[0].id]: contentsArray[0].entry
-        }
+        const priorSelection = new Map()
+        priorSelection.set(contentsArray[0].id, contentsArray[0].entry)
         selection.selected.value = priorSelection
 
         // Focus on the next entry
@@ -496,7 +493,7 @@ describe('Keyboard Navigation', () => {
 
         onKeyboardNavigation(fakeKeyboardEvent({ ...keyData, shiftKey: true }), contentsArray, store)
         // Ensure entry is selected in addition to prior selection
-        expect(selection.selected.value).toEqual(priorSelection)
+        expect(toObject(selection.selected.value)).toEqual(toObject(priorSelection))
         // Ensure lastSelectedEntry remains the same
         expect(selection.lastSelectedEntry.value).toBeNull()
       })

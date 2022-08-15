@@ -24,7 +24,7 @@
       </div>
       </template>
       <template v-slot="{ item, index }: { item: import('@/js/store').DepthEntry, index: number }">
-        <div class="entry-row" :class="{selected: selectionPlugin.selected.value[item.id], focused: index === selectionPlugin.focusedIndex.value}">
+        <div class="entry-row" :class="{selected: selectionPlugin.selected.value.has(item.id), focused: index === selectionPlugin.focusedIndex.value}">
           <div v-for="col in columns" :key="item.id + '-' + col.label" class="entry-column table-cell" :style="columnStyles[col.label]">
             <component :is="col.component"
                 :data-test="'col-' + col.label"
@@ -197,7 +197,7 @@ export default defineComponent({
       this.contents = {}
       if (cwd !== RootSymbol && this.config.parentEntry) {
         // We need to add the parent entry first
-        const parentEntry: StoreEntry = this.store.getUpOneLevelEntry(this.store.entryMap[cwd])
+        const parentEntry: StoreEntry = this.store.getUpOneLevelEntry(this.store.entryMap.get(cwd))
         const parentID = this.store.getId(parentEntry)
         this.contents[parentID] = { id: this.store.getId(parentEntry), entry: parentEntry, depth: 0 }
       }
@@ -205,6 +205,7 @@ export default defineComponent({
       Object.entries(contents).forEach(([k, v]) => {
         this.contents[k] = v
       })
+      await this.$nextTick()
       this.selectionPlugin?.onContentsUpdated(this.contentsArray, this.contents)
     },
     onResizeColumn (index: number, newWidth: number) {
