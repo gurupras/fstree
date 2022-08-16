@@ -16,7 +16,7 @@ import { defineComponent } from '@vue/runtime-core'
 import { reactive } from 'vue'
 import type { PropType } from 'vue'
 import { useMouse } from '@vueuse/core'
-import { SortOrder } from '@/js/column'
+import { SortOrder } from '../js/column'
 
 const mouse = reactive(useMouse())
 

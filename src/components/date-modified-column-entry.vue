@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts">
-import { StoreEntry } from '@/js/store'
+import { StoreEntry } from '../js/store'
 import { defineComponent } from '@vue/runtime-core'
 import type { PropType } from 'vue'
 

@@ -2,7 +2,7 @@
 <div class="fstree-root"
     tabindex="0"
     @click="onClick"
-    @keyup="onKeyUp">
+    @keydown="onKeyDown">
   <div class="body-root">
     <RecycleScroller class="scroller"
         ref="scroller"
@@ -23,7 +23,7 @@
         </div>
       </div>
       </template>
-      <template v-slot="{ item, index }: { item: import('@/js/store').DepthEntry, index: number }">
+      <template v-slot="{ item, index }: { item: import('../js/store').DepthEntry, index: number }">
         <div class="entry-row" :class="{selected: selectionPlugin.selected.value.has(item.id), focused: index === selectionPlugin.focusedIndex.value}">
           <div v-for="col in columns" :key="item.id + '-' + col.label" class="entry-column table-cell" :style="columnStyles[col.label]">
             <component :is="col.component"
@@ -47,16 +47,16 @@
 </template>
 
 <script lang="ts">
-import { DepthEntry, DepthEntryMap, RootSymbol, Store, StoreEntry } from '@/js/store'
+import { DepthEntry, DepthEntryMap, RootSymbol, Store, StoreEntry } from '../js/store'
 import { defineComponent } from '@vue/runtime-core'
 import type { PropType } from 'vue'
 import { ref, computed } from 'vue'
-import { Column, NameColumn, SizeColumn, DateModifiedColumn, SortOrder } from '@/js/column'
+import { Column, NameColumn, SizeColumn, DateModifiedColumn, SortOrder } from '../js/column'
 import { RecycleScroller } from 'vue-virtual-scroller'
 
-import { SelectionPlugin } from '@/js/selection'
-import { KeyboardNavigationPlugin } from '@/js/keyboard-navigation'
-import { FSTreeConfig, Defaults } from '@/js/fs-tree'
+import { SelectionPlugin } from '../js/selection'
+import { KeyboardNavigationPlugin } from '../js/keyboard-navigation'
+import { FSTreeConfig, Defaults } from '../js/fs-tree'
 
 export default defineComponent({
   components: {
@@ -168,7 +168,7 @@ export default defineComponent({
     onClick (e: MouseEvent) {
       this.selectionPlugin?.handleSelect(e, this.contentsArray)
     },
-    onKeyUp (e: KeyboardEvent) {
+    onKeyDown (e: KeyboardEvent) {
       if (this.selectionPlugin && e.key === 'Enter') {
         const depthEntry = this.selectionPlugin.focusedEntry.value?.entry
         if (!depthEntry) {
@@ -227,7 +227,7 @@ export default defineComponent({
       this.columnWidths[column.label] = newWidth
     },
     onTableResize () {
-      const style = getComputedStyle(this.$refs.scroller.$el)
+      const style = getComputedStyle((this.$refs.scroller as any).$el)
       const newWidth = parseInt(style.width, 10)
 
       this.width = newWidth

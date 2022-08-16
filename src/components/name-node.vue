@@ -23,7 +23,7 @@
 import type { PropType } from 'vue'
 import { Icon } from '@iconify/vue'
 import { defineComponent } from '@vue/runtime-core'
-import { FSTreeConfig } from '@/js/fs-tree'
+import { FSTreeConfig } from '../js/fs-tree'
 
 export default defineComponent({
   components: {

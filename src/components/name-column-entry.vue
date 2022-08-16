@@ -9,8 +9,8 @@
 </template>
 
 <script lang="ts">
-import { FSTreeConfig } from '@/js/fs-tree'
-import { Store, StoreEntry } from '@/js/store'
+import { FSTreeConfig } from '../js/fs-tree'
+import { Store, StoreEntry } from '../js/store'
 import { defineComponent } from '@vue/runtime-core'
 import type { PropType } from 'vue'
 

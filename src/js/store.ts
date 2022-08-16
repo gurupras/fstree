@@ -43,7 +43,8 @@ export interface SortFunction<T = any> {
 }
 
 type StoreEvents = {
-  update: undefined
+  update: undefined,
+  'update:expanded': undefined | { id: string, expanded: boolean }
 }
 
 export class Store<T = any> {
@@ -70,7 +71,7 @@ export class Store<T = any> {
     return this.emitter.on(evt, listener)
   }
 
-  emit<Name extends keyof StoreEvents> (evt: Name, data?: StoreEvents[Name]): Promise<void> {
+  emit<Name extends keyof StoreEvents> (evt: Name, data?: StoreEvents[Name]): Promise<void> { // FIXME: data? should really be data
     return this.emitter.emit(evt, data)
   }
 
@@ -148,6 +149,7 @@ export class Store<T = any> {
     let modified = false
     if (!val || this.hasChildren(id)) {
       this.expanded[id] = val
+      this.emitter.emit('update:expanded', { id, expanded: val })
     }
     const expandedSet = new Set(Object.keys(this.expanded))
     if (!val) {
@@ -168,6 +170,7 @@ export class Store<T = any> {
           if (this.expanded[childId]) {
             modified = true
             this.expanded[childId] = false
+            this.emitter.emit('update:expanded', { id, expanded: false })
             recursiveCollapse(childId)
           }
         }

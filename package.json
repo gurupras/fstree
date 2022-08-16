@@ -48,12 +48,16 @@
     "jsdon": "^0.1.15",
     "nanoid": "^3.3.4",
     "sass": "^1.52.1",
-    "typescript": "^4.7.2",
+    "typescript": "^4.7.4",
     "unplugin-icons": "^0.14.3",
     "unplugin-vue-components": "^0.19.6",
     "vite": "^2.8.0",
     "vitest": "^0.13.0",
     "vue-loader": "^16.8.3",
     "vue-tsc": "^0.34.15"
-  }
+  },
+  "files": [
+    "dist",
+    "src"
+  ]
 }

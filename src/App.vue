@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-import FsTree from '@/components/fs-tree.vue'
-import { RootSymbol, Store, StoreEntry } from '@/js/store'
+import FsTree from './components/fs-tree.vue'
+import { RootSymbol, Store, StoreEntry } from './js/store'
 
 import Data from './sameple-data'
 import { FSTreeConfig } from './js/fs-tree'
@@ -41,7 +41,7 @@ const store = new Store<IStoreEntry>({
         lastModified: entry.lastModified
       }
     } else {
-      parent = store.entryMap[parentID]
+      parent = store.entryMap.get(parentID)!
     }
     return {
       name: '..',
@@ -62,10 +62,10 @@ const onOpen = (entry: StoreEntry<IStoreEntry>) => {
   }
 }
 
-window.store = store
+;(window as any).store = store
 
 onMounted(() => {
-  window.app = this
+  ;(window as any).app = this
 })
 
 const config: FSTreeConfig = {
@@ -90,7 +90,7 @@ html, body, #app {
   height: 100%;
   overflow-y: hidden;
 }
-@import '@/style/themes/default.scss';
+@import './style/themes/default.scss';
 </style>
 <style lang="scss" scoped>
 @import 'bulma/bulma.sass';
