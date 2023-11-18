@@ -51,16 +51,18 @@ import { DepthEntry, DepthEntryMap, RootSymbol, Store, StoreEntry } from '../js/
 import { defineComponent } from '@vue/runtime-core'
 import type { PropType } from 'vue'
 import { ref, computed } from 'vue'
-import { Column, NameColumn, SizeColumn, DateModifiedColumn, SortOrder } from '../js/column'
+import { Column as ColumnType, NameColumn, SizeColumn, DateModifiedColumn, SortOrder } from '../js/column'
 import { RecycleScroller } from 'vue-virtual-scroller'
 
 import { SelectionPlugin } from '../js/selection'
 import { KeyboardNavigationPlugin } from '../js/keyboard-navigation'
 import { FSTreeConfig, Defaults } from '../js/fs-tree'
+import Column from './column.vue'
 
 export default defineComponent({
   components: {
-    RecycleScroller
+    RecycleScroller,
+    Column
   },
   emits: [
     'expanded',
@@ -78,7 +80,7 @@ export default defineComponent({
       default: () => RootSymbol
     },
     columns: {
-      type: Array as PropType<Column[]>,
+      type: Array as PropType<ColumnType[]>,
       default: () => {
         return [
           NameColumn,

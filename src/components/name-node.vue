@@ -3,8 +3,8 @@
   <div class="row">
     <div class="indent"></div>
     <div v-if="hasChildren" class="collapsible-container">
-      <i-mdi-chevron-right v-if="!expanded" class="collapsible collapsed" @click.stop="onToggleExpand"/>
-      <i-mdi-chevron-down v-else class="collapsible expanded" @click.stop="onToggleExpand"/>
+      <Icon icon="mdi-chevron-right" v-if="!expanded" class="collapsible collapsed" @click.stop="onToggleExpand"/>
+      <Icon icon="mdi-chevron-down" v-else class="collapsible expanded" @click.stop="onToggleExpand"/>
     </div>
     <div class="contents">
       <div v-if="!hasChildren" class="icon-container">

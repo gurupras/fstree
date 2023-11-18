@@ -4,7 +4,8 @@ import * as FSTreeConfig from './js/fs-tree'
 import * as KeyboardNavigation from './js/keyboard-navigation'
 import * as Selection from './js/selection'
 import * as Sort from './js/sort'
-import * as Store from './js/store'
+import * as StoreModule from './js/store'
+import { Store, RootSymbol } from './js/store'
 
 export {
   FSTree,
@@ -13,5 +14,7 @@ export {
   KeyboardNavigation,
   Selection,
   Sort,
-  Store
+  StoreModule,
+  Store,
+  RootSymbol
 }

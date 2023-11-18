@@ -16,7 +16,8 @@
     ],
     "paths": {
       "@/*": ["./src/*"]
-    }
+    },
+    "outDir": "dist"
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "src/stories/name-node.stories.ts", "src/stories/fstree.stories.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]

@@ -15,6 +15,9 @@ import { defineComponent } from '@vue/runtime-core'
 import type { PropType } from 'vue'
 
 export default defineComponent({
+  components: {
+    NameNode: () => import('./name-node.vue')
+  },
   props: {
     keyField: {
       type: String,

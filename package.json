@@ -1,9 +1,13 @@
 {
-  "name": "fstree",
+  "name": "@gurupras/fstree",
   "version": "0.0.0",
+  "type": "module",
+  "main": "dist/fstree.cjs",
+  "module": "dist/fstree.es.js",
+  "types": "dist/lib.d.ts",
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc --noEmit && vite build",
+    "build": "vue-tsc --noEmit || vite build --config vite.config.lib.ts",
     "serve": "vite preview",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
@@ -55,6 +59,13 @@
     "vitest": "^0.13.0",
     "vue-loader": "^16.8.3",
     "vue-tsc": "^0.34.15"
+  },
+  "exports": {
+    ".": "./dist/fstree.es.js",
+    "./style.css": "./dist/style.css",
+    "./js": "./dist/js",
+    "./dist/js/store": "./dist/js/store.d.ts",
+    "./src/style/themes/default.scss": "./src/style/themes/default.scss"
   },
   "files": [
     "dist",

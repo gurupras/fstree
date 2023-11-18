@@ -12,7 +12,8 @@ export default defineConfig({
     lib: {
       entry: resolve(__dirname, 'src/lib.ts'),
       name: 'FSTree',
-      fileName: 'fstree'
+      fileName: 'fstree',
+      formats: ['es', 'cjs', 'umd']
     },
     rollupOptions: {
       external: ['vue'],
@@ -31,7 +32,7 @@ export default defineConfig({
   plugins: [
     vue(),
     Components({
-      resolvers: IconsResolver()
+      resolvers: [IconsResolver()]
     }),
     Icons()
   ],

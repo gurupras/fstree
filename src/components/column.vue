@@ -4,8 +4,8 @@
     {{label}}
   </span>
   <span class="sort-order" @click="updateSort">
-    <i-mdi-chevron-up v-if="sort === SortOrder.Ascending"/>
-    <i-mdi-chevron-down v-else-if="sort === SortOrder.Descending"/>
+    <Icon icon="mdi-chevron-up" v-if="sort === SortOrder.Ascending"/>
+    <Icon icon="mdi-chevron-down" v-else-if="sort === SortOrder.Descending"/>
   </span>
   <div class="resizer" :class="{resizing}" @mousedown="onMouseDown" ref="resizer"></div>
 </div>
@@ -13,6 +13,7 @@
 
 <script lang="ts">
 import { defineComponent } from '@vue/runtime-core'
+import { Icon } from '@iconify/vue'
 import { reactive } from 'vue'
 import type { PropType } from 'vue'
 import { useMouse } from '@vueuse/core'
@@ -22,6 +23,9 @@ const mouse = reactive(useMouse())
 
 export default defineComponent({
   emits: ['update:sort', 'resize'],
+  components: {
+    Icon
+  },
   props: {
     label: {
       type: String,

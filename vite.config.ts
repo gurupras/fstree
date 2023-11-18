@@ -15,7 +15,7 @@ export default defineConfig({
   plugins: [
     vue(),
     Components({
-      resolvers: IconsResolver()
+      resolvers: [IconsResolver()]
     }),
     Icons()
   ],
