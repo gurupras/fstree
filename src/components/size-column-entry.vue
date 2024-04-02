@@ -5,10 +5,10 @@
 <script lang="ts">
 import { Store, StoreEntry } from '../js/store'
 import { defineComponent } from '@vue/runtime-core'
-import filesize from 'filesize'
+import { partial } from 'filesize'
 import type { PropType } from 'vue'
 
-const size = filesize.partial({ round: 0, standard: 'jedec' })
+const size = partial({ round: 0, standard: 'jedec' })
 
 export default defineComponent({
   props: {

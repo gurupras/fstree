@@ -19,6 +19,6 @@
     },
     "outDir": "dist"
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "src/stories/name-node.stories.ts", "src/stories/fstree.stories.ts"],
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "src/stories/name-node.stories.ts", "src/stories/fstree.stories.ts", "./.eslintrc.cjs"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

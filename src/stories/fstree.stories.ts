@@ -1,64 +1,66 @@
+import FSTree from '@/components/fs-tree.vue';
+import { generateLastModified, mockStore, mockStoreEntry } from '@/js/test-utils';
+import type { Meta, StoryObj } from '@storybook/vue3';
 
-import FSTree from '@/components/fs-tree.vue'
-import { Store, StoreEntry } from '@/js/store'
-import { ref } from '@vue/reactivity'
+import 'bulma';
+import './style.scss';
+import '@/style/themes/default.scss';
 
-import 'bulma'
-import './style.scss'
-import '@/style/themes/default.scss'
-import { generateLastModified, mockStore, MockStoreEntry, mockStoreEntry } from '@/js/test-utils'
-
-// More on default export: https://storybook.js.org/docs/vue/writing-stories/introduction#default-export
-export default {
+const meta: Meta<typeof FSTree> = {
   title: 'Example/FSTree',
-  component: FSTree
-}
+  component: FSTree,
+  argTypes: {
+    count: { control: 'number' },
+    bad: { control: 'number' },
+  },
+} satisfies Meta<typeof FSTree>;
 
-// More on component templates: https://storybook.js.org/docs/vue/writing-stories/introduction#using-args
-const Template = (args) => ({
-  // Components used in your story `template` are defined in the `components` object
-  components: { FSTree },
-  // The story's `args` need to be mapped into the template through the `setup()` method
-  setup () {
-    return {
-      args,
-      store: mockStore<MockStoreEntry>('path', 'parent')
-    }
-  },
-  data () {
-    return {
-      cwd: '/'
-    }
-  },
-  methods: {
-    addStoreEntries () {
-      const entries = generateFakeEntries(args.count, args.bad)
-      this.store.addEntries(entries)
-    },
-    mockStoreEntry (data?: any) {
-      const entry: any = mockStoreEntry(data)
-      entry.path = entry.id
-      delete entry.id
-      return entry
-    }
-  },
-  mounted () {
-    window.app = this
-  },
-  // And then the `args` are bound to your component with `v-bind="args"`
-  template: `
-  <div class="container section" style="height: 100%">
-    <div>
-      <button class="button is-link" @click="addStoreEntries">Add Entries (src={{args.count}} bad-src={{args.bad || 0}})</button>
-    </div>
-    <div class="root">
-      <FSTree :store="store" :cwd="cwd" ref="fstree"/>
-    </div>
-  </div>
-  `
-})
+export default meta;
+type Story = StoryObj<typeof meta>;
 
-function generateFakeEntries (count: number, unrelated: number = 0): StoreEntry[] {
+const Template: Story = {
+  render(args) {
+    return {
+      components: { FSTree },
+      setup() {
+        const store = mockStore('path', 'parent');
+        return { args, store };
+      },
+      data() {
+        return {
+          cwd: '/',
+        };
+      },
+      methods: {
+        addStoreEntries() {
+          const entries = generateFakeEntries(args.count, args.bad);
+          this.store.addEntries(entries);
+        },
+        mockStoreEntry(data?: any) {
+          const entry: any = mockStoreEntry(data);
+          entry.path = entry.id;
+          delete entry.id;
+          return entry;
+        },
+      },
+      mounted() {
+        window.app = this;
+      },
+      template: `
+        <div class="container section" style="height: 100%">
+          <div>
+            <button class="button is-link" @click="addStoreEntries">Add Entries (src={{args.count}} bad-src={{args.bad || 0}})</button>
+          </div>
+          <div class="root">
+            <FSTree :store="store" :cwd="cwd" ref="fstree"/>
+          </div>
+        </div>
+      `,
+    };
+  },
+};
+
+function generateFakeEntries(count: number, unrelated: number = 0): StoreEntry[] {
   const root = {
     name: '/',
     path: '/',
@@ -111,22 +113,25 @@ function generateFakeEntries (count: number, unrelated: number = 0): StoreEntry[
   return result
 }
 
-export const C100 = Template.bind({})
-// More on args: https://storybook.js.org/docs/vue/writing-stories/args
-C100.args = {
-  count: 100
-}
+export const C100: Story = {
+  ...Template,
+  args: {
+    count: 100,
+  },
+};
 
-export const C1000 = Template.bind({})
-// More on args: https://storybook.js.org/docs/vue/writing-stories/args
-C1000.args = {
-  count: 1000,
-  bad: 1000
-}
+export const C1000: Story = {
+  ...Template,
+  args: {
+    count: 1000,
+    bad: 1000,
+  },
+};
 
-export const C100OutOf10K = Template.bind({})
-// More on args: https://storybook.js.org/docs/vue/writing-stories/args
-C100OutOf10K.args = {
-  count: 100,
-  bad: 10000
-}
+export const C100OutOf10K: Story = {
+  ...Template,
+  args: {
+    count: 100,
+    bad: 10000,
+  },
+};

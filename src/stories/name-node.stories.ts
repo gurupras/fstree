@@ -1,37 +1,75 @@
+import type { Meta, StoryObj } from '@storybook/vue3';
 import NameNode from '../components/name-node.vue'
 
-// More on default export: https://storybook.js.org/docs/vue/writing-stories/introduction#default-export
-export default {
+const meta: Meta<typeof NameNode> = {
   title: 'Example/NameNode',
   component: NameNode,
-  // More on argTypes: https://storybook.js.org/docs/vue/api/argtypes
+  tags: ['autodocs'],
   argTypes: {
-    name: { type: 'String' }
-  }
-}
-
-// More on component templates: https://storybook.js.org/docs/vue/writing-stories/introduction#using-args
-const Template = (args) => ({
-  // Components used in your story `template` are defined in the `components` object
-  components: { TreeNode: NameNode },
-  // The story's `args` need to be mapped into the template through the `setup()` method
-  setup () {
-    return { args }
+    name: { control: 'text' },
+    hasChildren: { control: 'boolean' },
+    expanded: { control: 'boolean' },
+    depth: { control: 'number' },
+    icon: { control: 'text' },
+    config: { control: 'object' },
   },
-  // And then the `args` are bound to your component with `v-bind="args"`
-  template: '<tree-node v-bind="args" />'
-})
+  args: {
+    name: 'Node Name',
+    hasChildren: false,
+    expanded: false,
+    depth: 0,
+    icon: '',
+    config: {
+      expandOnRowClick: false,
+    },
+  },
+} satisfies Meta<typeof NameNode>;
 
-export const File = Template.bind({})
-// More on args: https://storybook.js.org/docs/vue/writing-stories/args
-File.args = {
-  name: 'example.pdf',
-  icon: 'vscode-icons:file-type-pdf2'
-}
+export default meta;
+type Story = StoryObj<typeof meta>;
 
-export const Folder = Template.bind({})
-// More on args: https://storybook.js.org/docs/vue/writing-stories/args
-Folder.args = {
-  name: 'src',
-  hasChildren: true
-}
+export const Default: Story = {
+  args: {
+    name: 'Default Node',
+  },
+};
+
+export const WithChildren: Story = {
+  args: {
+    name: 'Node With Children',
+    hasChildren: true,
+    expanded: false,
+  },
+};
+
+export const ExpandedNode: Story = {
+  args: {
+    name: 'Expanded Node',
+    hasChildren: true,
+    expanded: true,
+  },
+};
+
+export const CustomDepth: Story = {
+  args: {
+    name: 'Node With Custom Depth',
+    depth: 3,
+  },
+};
+
+export const CustomIcon: Story = {
+  args: {
+    name: 'Node With Custom Icon',
+    icon: 'mdi-folder',
+  },
+};
+
+export const ExpandOnClick: Story = {
+  args: {
+    name: 'Expand on Row Click',
+    hasChildren: true,
+    config: {
+      expandOnRowClick: true,
+    },
+  },
+};

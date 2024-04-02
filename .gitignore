@@ -6,3 +6,5 @@ dist-ssr
 
 /storybook-static
 /coverage
+
+*storybook.log
